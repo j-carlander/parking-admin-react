@@ -1,0 +1,15 @@
+.login-form{
+    display: flex;
+    flex-direction: column;
+
+    gap: 1em;
+    max-width: 40ch;
+    margin-inline: auto;
+}
+
+.login-btns{
+    display: flex;
+    gap: .5em;
+    justify-content: end;
+    align-items: center;
+}

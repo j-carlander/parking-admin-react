@@ -1,0 +1,31 @@
+nav{
+    background-color: #8ab1f8;
+    padding: 0.5rem 0;
+    /* height: fit-content; */
+}
+
+.nav-list{
+    list-style: none;
+    display: flex;
+    /* gap: 1em; */
+    margin: 0;
+    /* height: fit-content; */
+}
+
+.nav-link,
+.nav-link-active {
+    color: #242424;
+    padding: 0.5rem 1.5rem;
+    
+}
+.nav-link{
+    background-color: #8ab1f8;
+}
+
+.nav-link:hover,
+.nav-link-active,
+.nav-link-active:hover{
+    background-color: #678fd7;
+    color: #242424;
+}
+

@@ -1,0 +1,12 @@
+h1 {
+    font-size: 2rem;
+    line-height: 1.1;
+    text-align: start;
+    padding: 1em 1.5em;
+    margin: 0;
+    background-color: #c4d6fa;
+  }
+
+.header-logo{
+    max-height: 40px;
+}
