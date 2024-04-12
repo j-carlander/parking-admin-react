@@ -1,17 +1,25 @@
 import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import './Login.css';
+import { useUserContext } from "../../App";
+import { LoginRequest } from "parking-sdk";
+import fetchService from "../../services/fetchService";
+import { useNavigate } from "react-router-dom";
 
 export function Login() {
-  const [credentials, setCredentials] = useState({
+  const navigate = useNavigate()
+  const {currentUser, setCurrentUser} = useUserContext();
+  const [credentials, setCredentials] = useState<LoginRequest>({
     username: "",
     password: "",
   });
 
-  function signIn(e: React.ChangeEvent<HTMLFormElement>){
+  console.log('sign in: ', credentials, currentUser);
+  async function signIn(e: React.ChangeEvent<HTMLFormElement>){
     e.preventDefault();
-    console.log('sign in: ', credentials);
-    
+    await fetchService.signIn(credentials, setCurrentUser);
+    navigate('/');
+
   }
   return (
     <>
