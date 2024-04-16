@@ -13,9 +13,9 @@ export function Home() {
   return (
     <>
       <h2>{topic === "ARRIVAL" ? "Hämtlista" : "Lämnlista"}</h2>
-      <div className="toggles">
-        <button onClick={() => setTopic('ARRIVAL')}>Hämtlista</button>
-        <button onClick={() => setTopic('DEPARTURE')}>Lämnlista</button>
+      <div className="topic-toggles">
+        <button className={topic === 'ARRIVAL' ? 'active': undefined} onClick={() => setTopic('ARRIVAL')}>Hämtlista</button>
+        <button className={topic === 'DEPARTURE' ? 'active': undefined} onClick={() => setTopic('DEPARTURE')}>Lämnlista</button>
       </div>
       <article>
         <p>Current topic: {topic}</p>
