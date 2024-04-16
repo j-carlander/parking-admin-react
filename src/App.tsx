@@ -11,8 +11,6 @@ function App() {
     undefined
   );
 
-  console.log("current user: ", currentUser);
-
   useEffect(() => {
     (async () => {
       setCurrentUser(await fetchService.getCurrentUser());

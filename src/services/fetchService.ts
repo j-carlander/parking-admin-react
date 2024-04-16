@@ -1,4 +1,5 @@
 import { LoginRequest, UserDTO } from "parking-sdk";
+import { offsetCalc } from "../utils/offsetCalc";
 
 type Options = {
   method: string;
@@ -46,7 +47,7 @@ async function signIn(credentials: LoginRequest, setUser: (value: UserDTO | unde
 }
 
 function isAuthenticated(){
-  
+
     return !!localStorage.getItem('TOKEN');
 }
 
@@ -63,11 +64,26 @@ async function getCurrentUser(){
     return response.status === 200 ? json : undefined;
 }
 
+async function getCurrentTimeOffset() {
+  const fetchFrom = fetchHelper('/admin/settings/CURRENT_BOOKING_FROM_MINUTES', 'GET');
+  const fetchTo = fetchHelper('/admin/settings/CURRENT_BOOKING_TO_MINUTES', 'GET');
+
+  const [fromOffset, toOffset] = await Promise.all([fetchFrom, fetchTo]).then(async ([fromResp ,toResp]) => {
+    const fromJson = await fromResp.json();
+    const toJson = await toResp.json();
+    return [fromJson.value, toJson.value]
+  });
+
+  return fromOffset && toOffset ? offsetCalc(fromOffset, toOffset) : undefined;
+
+}
+
 /** Exported object */
 const fetchService = {
   signIn,
   isAuthenticated,
   signOut,
-  getCurrentUser
+  getCurrentUser,
+  getCurrentTimeOffset
 };
 export default fetchService;

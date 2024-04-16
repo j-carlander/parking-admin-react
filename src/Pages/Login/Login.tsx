@@ -4,7 +4,7 @@ import './Login.css';
 import { useUserContext } from "../../App";
 import { LoginRequest } from "parking-sdk";
 import fetchService from "../../services/fetchService";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export function Login() {
   const navigate = useNavigate()
@@ -14,12 +14,15 @@ export function Login() {
     password: "",
   });
 
-  console.log('sign in: ', credentials, currentUser);
   async function signIn(e: React.ChangeEvent<HTMLFormElement>){
     e.preventDefault();
     await fetchService.signIn(credentials, setCurrentUser);
     navigate('/');
 
+  }
+
+  if(currentUser){
+    return <Navigate to={'/'} />
   }
   return (
     <>
