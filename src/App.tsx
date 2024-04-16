@@ -1,4 +1,4 @@
-import { Outlet, useOutletContext } from "react-router-dom";
+import { NavLink, Outlet, useOutletContext } from "react-router-dom";
 import "./App.css";
 import { Header } from "./Components/Header/Header";
 import { UserDTO } from "parking-sdk";
@@ -22,7 +22,8 @@ function App() {
       <Header {...{ currentUser, setCurrentUser }} />
       <div className="page-wrapper">
         <aside className="side-menu">
-          <span className="material-symbols-outlined side-menu-btn">add</span>
+          <NavLink to={'/ny-bokning'}><span className="material-symbols-outlined side-menu-btn">add</span></NavLink>
+          
           <span className="material-symbols-outlined side-menu-btn">
             search
           </span>

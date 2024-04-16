@@ -5,6 +5,7 @@ import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Home } from './Pages/Home/Home.tsx'
 import { Login } from './Pages/Login/Login.tsx'
+import { BookingForm } from './Pages/BookingForm/BookingForm.tsx'
 
 export const pages = [
   {
@@ -25,6 +26,10 @@ export const pages = [
     path:'/garage',
     element: <h2>Garage</h2>,
     label: 'Garage'
+  },
+  {
+    path: '/ny-bokning',
+    element: <BookingForm />
   }
 ]
 
