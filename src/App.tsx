@@ -18,14 +18,25 @@ function App() {
       setCurrentUser(await fetchService.getCurrentUser());
     })();
   }, []);
-  
+
   return (
     <>
       <Header {...{ currentUser, setCurrentUser }} />
-      <div className="outlet-wrapper">
-        <Outlet
-          context={{ currentUser, setCurrentUser } satisfies UserContext}
-        />
+      <div className="page-wrapper">
+        <aside className="side-menu">
+          <span className="material-symbols-outlined side-menu-btn">add</span>
+          <span className="material-symbols-outlined side-menu-btn">
+            search
+          </span>
+          <span className="material-symbols-outlined side-menu-btn">
+            attach_money
+          </span>
+        </aside>
+        <main className="outlet-wrapper">
+          <Outlet
+            context={{ currentUser, setCurrentUser } satisfies UserContext}
+          />
+        </main>
       </div>
     </>
   );
