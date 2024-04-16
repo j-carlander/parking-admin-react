@@ -6,28 +6,31 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Home } from './Pages/Home/Home.tsx'
 import { Login } from './Pages/Login/Login.tsx'
 
-const pages = [
+export const pages = [
   {
-    path: "/",
-    element: <Home />
+    path: '/',
+    element: <Home />,
+    label: 'Bokningar'
   },
   {
-    path: "/logga-in",
+    path: '/logga-in',
     element: <Login />
   },
   {
     path:'/ordrar',
-    element: <h2>Ordrar</h2>
+    element: <h2>Ordrar</h2>,
+    label: 'Ordrar'
   },
   {
     path:'/garage',
-    element: <h2>Garage</h2>
+    element: <h2>Garage</h2>,
+    label: 'Garage'
   }
 ]
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
     children: pages
   }
