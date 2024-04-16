@@ -46,6 +46,7 @@ async function signIn(credentials: LoginRequest, setUser: (value: UserDTO | unde
 }
 
 function isAuthenticated(){
+  
     return !!localStorage.getItem('TOKEN');
 }
 
@@ -56,6 +57,7 @@ function signOut(setUser: (value: UserDTO | undefined) => void){
 
 async function getCurrentUser(){
     const response = await fetchHelper('/admin/users/me', 'GET');
+    if(response.status !== 200) localStorage.removeItem('TOKEN');
     const json = await response.json();
     console.log('json response: ', json);
     return response.status === 200 ? json : undefined;

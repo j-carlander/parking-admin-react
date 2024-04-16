@@ -2,12 +2,14 @@ import { useState } from "react";
 import './Home.css';
 import { Navigate } from "react-router-dom";
 import fetchService from "../../services/fetchService";
+import { useUserContext } from "../../App";
 
 export function Home() {
   const [topic, setTopic] = useState<"ARRIVAL" | "DEPARTURE">("ARRIVAL");
+  const { currentUser } = useUserContext()
 
  
-  if(!fetchService.isAuthenticated()){
+  if(!currentUser){
     return <Navigate to={'/logga-in'} />
   }
   return (

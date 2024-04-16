@@ -18,9 +18,13 @@
 }
 
 .outlet-wrapper{
-  /* text-align: center; */
   max-width: 1280px;
   margin: 2rem auto 0 auto;
   flex-grow: 1;
 }
 
+/* General styling */
+
+h2{
+  margin-block: 1em;
+}
