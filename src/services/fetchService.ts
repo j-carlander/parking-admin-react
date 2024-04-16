@@ -1,4 +1,4 @@
-import { LoginRequest, UserDTO } from "parking-sdk";
+import { FlightBookingDTO, HourBookingDTO, LoginRequest, UserDTO } from "parking-sdk";
 import { offsetCalc } from "../utils/offsetCalc";
 
 type Options = {
@@ -78,12 +78,25 @@ async function getCurrentTimeOffset() {
 
 }
 
+
+async function getCurrentBookings(){
+  const fetchArrivals = await fetchHelper('/admin/flights/current?flightType=ARRIVAL', 'GET') 
+  const fetchDepartures = await fetchHelper('/admin/flights/current/departures', 'GET');
+
+  return await Promise.all([fetchArrivals, fetchDepartures]).then(async ([arrivalResp ,departureResp]) => {
+    const arrivalJson = await arrivalResp.json();
+    const departureJson = await departureResp.json();
+    return [arrivalJson, departureJson]
+  });
+}
+
 /** Exported object */
 const fetchService = {
   signIn,
   isAuthenticated,
   signOut,
   getCurrentUser,
-  getCurrentTimeOffset
+  getCurrentTimeOffset,
+  getCurrentBookings
 };
 export default fetchService;
