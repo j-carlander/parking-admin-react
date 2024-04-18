@@ -20,6 +20,11 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --primary-color: #8ab1f8;
+--primary-tint: #c4d6fa;
+--primary-shade: #678fd7;
+--primary-contrast: #000;
 }
 
 
