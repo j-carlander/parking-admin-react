@@ -1,20 +1,18 @@
-import { Autocomplete, TextField } from "@mui/material";
-import { BookingDTO, FlightDTO } from "parking-sdk";
+import { Autocomplete, AutocompleteChangeReason, AutocompleteInputChangeReason, TextField } from "@mui/material";
+import { FlightDTO } from "parking-sdk";
 import { useState } from "react";
 import fetchService from "../../services/fetchService";
 import { suggestParkingDate } from "../../utils/suggestParkingDate";
+import { BookingProps } from "../../types";
 /** Types */
-type SelectFlightProps = {
-  booking: BookingDTO | undefined;
-  setBooking: React.Dispatch<React.SetStateAction<BookingDTO>>;
-};
+
 export type TravelDates = {
   departure: string;
   arrival: string;
 };
 
 /** Component */
-export function SelectFlightForm({ booking, setBooking }: SelectFlightProps) {
+export function SelectFlightForm({ booking, setBooking }: BookingProps) {
   /** States */
   const [travelDates, setTravelDates] = useState<TravelDates>({
     departure: booking?.departureDate
@@ -79,8 +77,28 @@ export function SelectFlightForm({ booking, setBooking }: SelectFlightProps) {
 
   function onAutoCompleteChange(
     selectedFlight: FlightDTO | string | null,
+    reason:  AutocompleteChangeReason | AutocompleteInputChangeReason,
     direction: "departure" | "arrival"
   ) {
+    console.log('reason: ', reason);
+    if(reason === 'clear'){
+      setManualFlightInput((manuals) => ({
+        ...manuals,
+        [direction]: '',
+      }));
+      setSelectedFlights((flights) => ({
+        ...flights,
+        [direction]: {},
+      }));
+      setBooking((booking) => ({
+        ...booking,
+        [`${direction}Flight`]: undefined,
+        [`${direction}FlightNumber`]: undefined,
+        [`${direction}Date`]: new Date(travelDates[direction]),
+      }));
+      return
+    }
+    
     if (selectedFlight && typeof selectedFlight === "object") {
       setSelectedFlights((flights) => ({
         ...flights,
@@ -107,7 +125,7 @@ export function SelectFlightForm({ booking, setBooking }: SelectFlightProps) {
         ...booking,
         [`${direction}Flight`]: undefined,
         [`${direction}FlightNumber`]: selectedFlight,
-        [`${direction}Date`]: travelDates[direction],
+        [`${direction}Date`]: new Date(travelDates[direction]),
       }));
     }
   }
@@ -131,12 +149,12 @@ export function SelectFlightForm({ booking, setBooking }: SelectFlightProps) {
           options={flightLists.departure}
           getOptionLabel={(option) => generateOptionLabel(option, "departure")}
           value={selectedFlights.departure}
-          onChange={(e, selectedFlight) => {
-            onAutoCompleteChange(selectedFlight, "departure");
+          onChange={(e, selectedFlight, reason) => {
+            onAutoCompleteChange(selectedFlight, reason, "departure");
           }}
           inputValue={manualFlightInput.departure}
-          onInputChange={(e, selectedFlight) => {
-            onAutoCompleteChange(selectedFlight, "departure");
+          onInputChange={(e, selectedFlight, reason) => {
+            onAutoCompleteChange(selectedFlight, reason, "departure");
           }}
           renderInput={(params) => (
             <TextField {...params} variant="filled" label="Flyg utresa" />
@@ -160,17 +178,12 @@ export function SelectFlightForm({ booking, setBooking }: SelectFlightProps) {
           options={flightLists.arrival}
           getOptionLabel={(option) => generateOptionLabel(option, "arrival")}
           value={selectedFlights.arrival}
-          onChange={(e, selectedFlight) => {
-            selectedFlight && typeof selectedFlight !== "string"
-              ? setSelectedFlights((flights) => ({
-                  ...flights,
-                  arrival: selectedFlight,
-                }))
-              : null;
+          onChange={(e, selectedFlight, reason) => {
+            onAutoCompleteChange(selectedFlight, reason, "arrival");
           }}
           inputValue={manualFlightInput.arrival}
-          onInputChange={(e, value) => {
-            setManualFlightInput((manuals) => ({ ...manuals, arrival: value }));
+          onInputChange={(e, selectedFlight, reason) => {
+            onAutoCompleteChange(selectedFlight, reason, "arrival");
           }}
           renderInput={(params) => (
             <TextField {...params} variant="filled" label="Flyg hemresa" />
