@@ -1,7 +1,11 @@
-import { UserDTO } from "parking-sdk";
+import { BookingDTO, UserDTO } from "parking-sdk";
 
 export type UserContext = {
     currentUser: UserDTO | undefined;
-    setCurrentUser: (value: UserDTO | undefined) => void;
+    setCurrentUser: React.Dispatch<React.SetStateAction<UserDTO>>;
   };
   
+export type BookingProps = {
+  booking: BookingDTO;
+  setBooking: React.Dispatch<React.SetStateAction<BookingDTO>>;
+};

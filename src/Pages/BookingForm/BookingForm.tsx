@@ -16,99 +16,21 @@ import { useState } from "react";
 import "./BookingForm.css";
 import { CheckBox } from "@mui/icons-material";
 import { SelectFlightForm } from "../../Components/SelectFlightForm/SelectFlightForm";
+import { ParkingDateRange } from "../../Components/ParkingDateRange/ParkingDateRange";
 
 export function BookingForm() {
-  const [booking, setBooking] = useState<BookingDTO>({});
+  const [booking, setBooking] = useState<BookingDTO>(defaultBooking);
   const [totalPrice, setTotalPrice] = useState(0);
 
   console.log("booking: ", booking);
 
-  function updateBooking(e: React.ChangeEvent<HTMLInputElement>) {
-    const field: string = e.currentTarget.name;
-    const value: string = e.currentTarget.value;
-
-    setBooking((prevData) => ({ ...prevData, [field]: value }));
-  }
 
   return (
     <>
       <h2>Ny bokning</h2>
       <form className="booking-form">
         <SelectFlightForm {...{ booking, setBooking }} />
-        <h3>Parkeringsperiod</h3>
-
-        <section className="form-field-wrapper">
-          <TextField
-            variant="filled"
-            label="Startdatum"
-            type="date"
-            name="departureDate"
-            value={new Intl.DateTimeFormat('sv-SE').format(booking.departureDate) || ""}
-            onChange={updateBooking}
-            placeholder=""
-            InputLabelProps={{
-              shrink: true,
-            }}
-            required
-          />
-
-          <TextField
-            variant="filled"
-            label="Slutdatum"
-            type="date"
-            name="arrivalDate"
-            value={new Intl.DateTimeFormat('sv-SE').format(booking.arrivalDate) || ""}
-            onChange={updateBooking}
-            placeholder=""
-            InputLabelProps={{
-              shrink: true,
-            }}
-            required
-          />
-        </section>
-        <section className="form-field-wrapper">
-          <TextField
-            variant="filled"
-            label="Starttid"
-            type="text"
-            name="departureDate"
-            value={new Intl.DateTimeFormat('sv-SE', { timeStyle: 'short' }).format(booking.departureDate) || ""}
-            onChange={updateBooking}
-            placeholder="tt:mm"
-            // InputLabelProps={{
-            //   shrink: true,
-            // }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <span className="material-symbols-outlined">schedule</span>
-                </InputAdornment>
-              ),
-            }}
-            required
-          />
-
-          <TextField
-            variant="filled"
-            label="Sluttid"
-            type="text"
-            name="arrivalDate"
-            value={new Intl.DateTimeFormat('sv-SE', { timeStyle: 'short' }).format(booking.arrivalDate) || ""}
-            onChange={updateBooking}
-            placeholder="tt:mm"
-            // InputLabelProps={{
-            //   shrink: true,
-            // }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <span className="material-symbols-outlined">schedule</span>
-                </InputAdornment>
-              ),
-            }}
-            required
-          />
-        </section>
+        <ParkingDateRange {...{ booking, setBooking }} />
         <h3>Plats*</h3>
         <RadioGroup
           name="resource"
@@ -303,4 +225,36 @@ export function BookingForm() {
       </form>
     </>
   );
+}
+
+const defaultBooking: BookingDTO = {
+  bookingId: undefined,
+  name: undefined,
+  phone: undefined,
+  email: undefined,
+  departureDate: undefined,
+  arrivalDate: undefined,
+  arrivalFlight: undefined,
+  arrivalFlightNumber: undefined,
+  departureFlight: undefined,
+  departureFlightNumber: undefined,
+  travelHomeFrom: undefined,
+  registrationNumber: undefined,
+  resource: undefined,
+  qtyPersons: undefined,
+  qtyPersonsPickedUp: undefined,
+  qtyPersonsDroppedOff: undefined,
+  handLuggageOnly: undefined,
+  bookingStatus: undefined,
+  comment: undefined,
+  qr: undefined,
+  qrImage: undefined,
+  createdBy: undefined,
+  createdDate: undefined,
+  updatedBy: undefined,
+  updatedDate: undefined,
+  prepaidTicket: undefined,
+  childSafetySeat: undefined,
+  vehicleType: undefined,
+  engineType: undefined,
 }
