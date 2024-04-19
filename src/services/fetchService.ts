@@ -1,4 +1,4 @@
-import { LoginRequest, OrderItemDTO, UserDTO } from "parking-sdk";
+import { FlightDTO, LoginRequest, OrderItemDTO, UserDTO } from "parking-sdk";
 import { offsetCalc } from "../utils/offsetCalc";
 
 type Options = {
@@ -61,7 +61,6 @@ async function getCurrentUser(){
     const response = await fetchHelper('/admin/users/me', 'GET');
     if(response.status !== 200) localStorage.removeItem('TOKEN');
     const json = await response.json();
-    console.log('json response: ', json);
     return response.status === 200 ? json : undefined;
 }
 
@@ -127,6 +126,17 @@ async function getMainFeatures() {
   const response = await fetchHelper('/public/mainfeatures', 'GET')
 }
 
+/** Get flights by day and direction(type) */
+
+async function getFlights(flightDate:string, flightType: string): Promise<FlightDTO[]> {
+  const queryParams = new URLSearchParams({flightDate, flightType: flightType.toUpperCase()});
+  console.log('query: ',queryParams.toString());
+
+  const response = await fetchHelper(`/admin/flights?${queryParams.toString()}`, 'GET')
+  const json = await response.json()
+  return json;
+}
+
 /** Exported object */
 const fetchService = {
   signIn,
@@ -138,6 +148,7 @@ const fetchService = {
   getBooking,
   postNewOrderObject,
   postNewOrderItem,
-  postUpdateOrderItem
+  postUpdateOrderItem,
+  getFlights
 };
 export default fetchService;

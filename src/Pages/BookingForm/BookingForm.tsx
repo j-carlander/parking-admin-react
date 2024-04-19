@@ -17,7 +17,6 @@ import "./BookingForm.css";
 import { CheckBox } from "@mui/icons-material";
 import { SelectFlightForm } from "../../Components/SelectFlightForm/SelectFlightForm";
 
-
 export function BookingForm() {
   const [booking, setBooking] = useState<BookingDTO>({});
   const [totalPrice, setTotalPrice] = useState(0);
@@ -35,7 +34,7 @@ export function BookingForm() {
     <>
       <h2>Ny bokning</h2>
       <form className="booking-form">
-        <SelectFlightForm {...{booking, setBooking}}/>
+        <SelectFlightForm {...{ booking, setBooking }} />
         <h3>Parkeringsperiod</h3>
 
         <section className="form-field-wrapper">
@@ -44,7 +43,7 @@ export function BookingForm() {
             label="Startdatum"
             type="date"
             name="departureDate"
-            value={booking.departureDate?.toString() || ""}
+            value={new Intl.DateTimeFormat('sv-SE').format(booking.departureDate) || ""}
             onChange={updateBooking}
             placeholder=""
             InputLabelProps={{
@@ -58,7 +57,7 @@ export function BookingForm() {
             label="Slutdatum"
             type="date"
             name="arrivalDate"
-            value={booking.arrivalDate?.toString() || ""}
+            value={new Intl.DateTimeFormat('sv-SE').format(booking.arrivalDate) || ""}
             onChange={updateBooking}
             placeholder=""
             InputLabelProps={{
@@ -73,7 +72,7 @@ export function BookingForm() {
             label="Starttid"
             type="text"
             name="departureDate"
-            value={booking.departureDate?.toString() || ""}
+            value={new Intl.DateTimeFormat('sv-SE', { timeStyle: 'short' }).format(booking.departureDate) || ""}
             onChange={updateBooking}
             placeholder="tt:mm"
             // InputLabelProps={{
@@ -94,7 +93,7 @@ export function BookingForm() {
             label="Sluttid"
             type="text"
             name="arrivalDate"
-            value={booking.arrivalDate?.toString() || ""}
+            value={new Intl.DateTimeFormat('sv-SE', { timeStyle: 'short' }).format(booking.arrivalDate) || ""}
             onChange={updateBooking}
             placeholder="tt:mm"
             // InputLabelProps={{
@@ -112,13 +111,17 @@ export function BookingForm() {
         </section>
         <h3>Plats*</h3>
         <RadioGroup
-    name="resource"
-    // value={value}
-    // onChange={handleChange}
-  >
-    <FormControlLabel value="garage" control={<Radio />} label="garage" />
-    <FormControlLabel value="utomhus" control={<Radio />} label="utomhus" />
-  </RadioGroup>
+          name="resource"
+          // value={value}
+          // onChange={handleChange}
+        >
+          <FormControlLabel value="garage" control={<Radio />} label="garage" />
+          <FormControlLabel
+            value="utomhus"
+            control={<Radio />}
+            label="utomhus"
+          />
+        </RadioGroup>
         {/* Contact info */}
         <section className="form-field-wrapper">
           <TextField
@@ -164,13 +167,14 @@ export function BookingForm() {
             required
           />
         </section>
-{/* Prepaid/Member */}
+        {/* Prepaid/Member */}
         <TextField
           className="full-width-field"
           variant="filled"
           label="Abonnemang"
           select
           name="prepaid"
+          value="notInUse"
           // value={booking.arrivalDate?.toString() || ""}
           // onChange={updateBooking}
           placeholder=""
@@ -188,10 +192,10 @@ export function BookingForm() {
             </MenuItem>
           ))} */}
         </TextField>
-          {/* Features */}
-        <Accordion >
+        {/* Features */}
+        <Accordion>
           <AccordionSummary
-          className="features-accordion"
+            className="features-accordion"
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1-content"
             id="features"
