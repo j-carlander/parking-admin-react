@@ -1,6 +1,6 @@
 import { Autocomplete, AutocompleteChangeReason, AutocompleteInputChangeReason, TextField } from "@mui/material";
 import { FlightDTO } from "parking-sdk";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import fetchService from "../../services/fetchService";
 import { suggestParkingDate } from "../../utils/suggestParkingDate";
 import { BookingProps } from "../../types";
@@ -15,12 +15,8 @@ export type TravelDates = {
 export function SelectFlightForm({ booking, setBooking }: BookingProps) {
   /** States */
   const [travelDates, setTravelDates] = useState<TravelDates>({
-    departure: booking?.departureDate
-      ? new Intl.DateTimeFormat("sv-SE").format(booking.departureDate)
-      : "",
-    arrival: booking?.arrivalDate
-      ? new Intl.DateTimeFormat("sv-SE").format(booking.arrivalDate)
-      : "",
+    departure: "",
+    arrival: "",
   });
 
   const [flightLists, setFlightLists] = useState<{
@@ -37,6 +33,25 @@ export function SelectFlightForm({ booking, setBooking }: BookingProps) {
     departure: string;
     arrival: string;
   }>({ departure: "", arrival: "" });
+
+  useEffect(() => {
+    if (booking.departureDate) {
+      setTravelDates((traveldates) => ({
+        ...traveldates,
+        departureDate: new Intl.DateTimeFormat("sv-SE").format(
+          booking.departureDate
+        )
+      }));
+    }
+    if (booking.arrivalDate) {
+      setTravelDates((traveldates) => ({
+        ...traveldates,
+        arrivalDate: new Intl.DateTimeFormat("sv-SE").format(
+          booking.arrivalDate
+        )
+      }));
+    }
+  }, [booking]);
 
   /** Functions */
   async function updateFlightList(e: React.ChangeEvent<HTMLInputElement>) {

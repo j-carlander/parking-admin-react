@@ -1,4 +1,11 @@
-import { FlightDTO, LoginRequest, OrderItemDTO, ResourceDTO, ResourceStatusDTO, UserDTO } from "parking-sdk";
+import {
+  FlightDTO,
+  LoginRequest,
+  OrderItemDTO,
+  ResourceDTO,
+  ResourceStatusDTO,
+  UserDTO,
+} from "parking-sdk";
 import { calcOffset } from "../utils/calcOffset";
 import { resolvePath } from "react-router-dom";
 
@@ -176,16 +183,45 @@ async function getFlights(
 }
 
 async function getResources(): Promise<ResourceDTO[]> {
-  const response = await fetchHelper('/public/resources', 'GET');
-  if(response.status === 200) return await response.json()
-  return []
+  const response = await fetchHelper("/public/resources", "GET");
+  if (response.status === 200) return await response.json();
+  return [];
 }
 
-async function getAvailableResourcesByDates(fromDate: Date, toDate: Date): Promise<ResourceStatusDTO[]> {
-  const params = `?fromDate=${fromDate.toISOString()}&toDate=${toDate.toISOString()}`
-  const response = await fetchHelper(`/public/resources/available${params}`, 'GET');
+async function getAvailableResourcesByDates(
+  fromDate: Date,
+  toDate: Date
+): Promise<ResourceStatusDTO[]> {
+  if (!fromDate || !toDate)
+    throw new Error("Missing parameter registration number and/or resource ID");
 
-  return await response.json()
+  const params = `?fromDate=${fromDate.toISOString()}&toDate=${toDate.toISOString()}`;
+  const response = await fetchHelper(
+    `/public/resources/available${params}`,
+    "GET"
+  );
+
+  return await response.json();
+}
+
+async function findPrepaidTicketsByBookingAdmin(
+  regNum: string,
+  resourceId: number,
+  departureDate?: Date,
+  arrivalDate?: Date
+) {
+  if (!regNum || !resourceId)
+    throw new Error("Missing parameter registration number and/or resource ID");
+
+  const params = `?registrationNumber=${regNum}&resourceId=${resourceId}${
+    departureDate ? "&" + departureDate.toISOString() : ""
+  }${arrivalDate ? "&" + arrivalDate.toISOString() : ""}`;
+
+  const response = await fetchHelper(
+    `/admin/prepaidtickets/booking${params}`,
+    "GET"
+  );
+  return await response.json();
 }
 
 /** Exported object */
@@ -203,7 +239,7 @@ const fetchService = {
   getFlights,
   getMainFeatures,
   getResources,
-  getAvailableResourcesByDates
-
+  getAvailableResourcesByDates,
+  findPrepaidTicketsByBookingAdmin,
 };
 export default fetchService;

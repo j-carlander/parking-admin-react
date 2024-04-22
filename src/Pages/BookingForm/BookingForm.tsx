@@ -17,6 +17,7 @@ import { SelectFlightForm } from "../../Components/SelectFlightForm/SelectFlight
 import { ParkingDateRange } from "../../Components/ParkingDateRange/ParkingDateRange";
 import { ParkingResource } from "../../Components/ParkingResource/ParkingResource";
 import { TotalPrice } from "../../types";
+import { CarDetails } from "../../Components/CarDetails/CarDetails";
 
 export function BookingForm() {
   const [booking, setBooking] = useState<BookingDTO>(defaultBooking);
@@ -35,76 +36,7 @@ export function BookingForm() {
         <SelectFlightForm {...{ booking, setBooking }} />
         <ParkingDateRange {...{ booking, setBooking }} />
         <ParkingResource {...{ booking, setBooking, setTotalPrice }} />
-        {/* Contact info */}
-        <section className="form-field-wrapper">
-          <TextField
-            variant="filled"
-            label="Registreringsnummer"
-            type="text"
-            name="registrationNumber"
-            // value={booking.departureDate?.toString() || ""}
-            // onChange={updateBooking}
-            placeholder=""
-            // InputLabelProps={{
-            //   shrink: true,
-            // }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <span className="material-symbols-outlined">
-                    directions_car
-                  </span>
-                </InputAdornment>
-              ),
-            }}
-            required
-          />
-          <TextField
-            variant="filled"
-            label="Antal resenärer"
-            type="text"
-            name="qtyPeople"
-            // value={booking.arrivalDate?.toString() || ""}
-            // onChange={updateBooking}
-            placeholder=""
-            // InputLabelProps={{
-            //   shrink: true,
-            // }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <span className="material-symbols-outlined">group</span>
-                </InputAdornment>
-              ),
-            }}
-            required
-          />
-        </section>
-        {/* Prepaid/Member */}
-        <TextField
-          className="full-width-field"
-          variant="filled"
-          label="Abonnemang"
-          select
-          name="prepaid"
-          value="notInUse"
-          // value={booking.arrivalDate?.toString() || ""}
-          // onChange={updateBooking}
-          placeholder=""
-          // InputLabelProps={{
-          //   shrink: true,
-          // }}
-          required
-        >
-          <MenuItem key={"notInUse"} value={"notInUse"}>
-            Använd ej
-          </MenuItem>
-          {/* {currencies.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))} */}
-        </TextField>
+        <CarDetails {...{booking, setBooking}} /> 
         {/* Features */}
         <Accordion>
           <AccordionSummary

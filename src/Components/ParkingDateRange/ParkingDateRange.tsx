@@ -70,7 +70,7 @@ export function ParkingDateRange({ booking, setBooking }: BookingProps) {
           field === "departureDate"
             ? parkingTime.departureTime
             : parkingTime.arrivalTime;
-        const date = new Date(value + "T" + time);
+        const date = time ? new Date(value + "T" + time) : new Date(value);
         return { ...booking, [field]: date };
       });
     }
