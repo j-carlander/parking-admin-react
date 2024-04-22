@@ -5,8 +5,6 @@ import {
   FormControlLabel,
   InputAdornment,
   MenuItem,
-  Radio,
-  RadioGroup,
   TextField,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -17,13 +15,18 @@ import "./BookingForm.css";
 import { CheckBox } from "@mui/icons-material";
 import { SelectFlightForm } from "../../Components/SelectFlightForm/SelectFlightForm";
 import { ParkingDateRange } from "../../Components/ParkingDateRange/ParkingDateRange";
+import { ParkingResource } from "../../Components/ParkingResource/ParkingResource";
+import { TotalPrice } from "../../types";
 
 export function BookingForm() {
   const [booking, setBooking] = useState<BookingDTO>(defaultBooking);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState<TotalPrice>({resourcePrice: 0, featurePrices: []});
 
   console.log("booking: ", booking);
 
+  function calcTotalPrice(){
+      return totalPrice.resourcePrice + totalPrice.featurePrices.reduce((tot: number, feature: number )=> tot + feature, 0)
+  }
 
   return (
     <>
@@ -31,19 +34,7 @@ export function BookingForm() {
       <form className="booking-form">
         <SelectFlightForm {...{ booking, setBooking }} />
         <ParkingDateRange {...{ booking, setBooking }} />
-        <h3>Plats*</h3>
-        <RadioGroup
-          name="resource"
-          // value={value}
-          // onChange={handleChange}
-        >
-          <FormControlLabel value="garage" control={<Radio />} label="garage" />
-          <FormControlLabel
-            value="utomhus"
-            control={<Radio />}
-            label="utomhus"
-          />
-        </RadioGroup>
+        <ParkingResource {...{ booking, setBooking, setTotalPrice }} />
         {/* Contact info */}
         <section className="form-field-wrapper">
           <TextField
@@ -131,7 +122,7 @@ export function BookingForm() {
         </Accordion>
         <p className="total-price">
           <span>Totalpris: </span>
-          {totalPrice} kr
+          {calcTotalPrice()} kr
         </p>
         <h3>Övriga uppgifter</h3>
         <TextField
@@ -227,6 +218,7 @@ export function BookingForm() {
   );
 }
 
+/** Deafult object for a booking with all keys */
 const defaultBooking: BookingDTO = {
   bookingId: undefined,
   name: undefined,

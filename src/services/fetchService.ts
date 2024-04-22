@@ -1,5 +1,6 @@
-import { FlightDTO, LoginRequest, OrderItemDTO, UserDTO } from "parking-sdk";
-import { offsetCalc } from "../utils/offsetCalc";
+import { FlightDTO, LoginRequest, OrderItemDTO, ResourceDTO, ResourceStatusDTO, UserDTO } from "parking-sdk";
+import { calcOffset } from "../utils/calcOffset";
+import { resolvePath } from "react-router-dom";
 
 type Options = {
   method: string;
@@ -86,7 +87,7 @@ async function getCurrentTimeOffset() {
     }
   );
 
-  return fromOffset && toOffset ? offsetCalc(fromOffset, toOffset) : undefined;
+  return fromOffset && toOffset ? calcOffset(fromOffset, toOffset) : undefined;
 }
 
 async function getCurrentBookings() {
@@ -174,6 +175,19 @@ async function getFlights(
   return json;
 }
 
+async function getResources(): Promise<ResourceDTO[]> {
+  const response = await fetchHelper('/public/resources', 'GET');
+  if(response.status === 200) return await response.json()
+  return []
+}
+
+async function getAvailableResourcesByDates(fromDate: Date, toDate: Date): Promise<ResourceStatusDTO[]> {
+  const params = `?fromDate=${fromDate.toISOString()}&toDate=${toDate.toISOString()}`
+  const response = await fetchHelper(`/public/resources/available${params}`, 'GET');
+
+  return await response.json()
+}
+
 /** Exported object */
 const fetchService = {
   signIn,
@@ -188,5 +202,8 @@ const fetchService = {
   postUpdateOrderItem,
   getFlights,
   getMainFeatures,
+  getResources,
+  getAvailableResourcesByDates
+
 };
 export default fetchService;

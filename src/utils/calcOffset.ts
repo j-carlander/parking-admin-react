@@ -1,4 +1,4 @@
-export function offsetCalc(currentFromMinutesOffset: number, currentToMinutesOffset: number): { from: string, to: string }{
+export function calcOffset(currentFromMinutesOffset: number, currentToMinutesOffset: number): { from: string, to: string }{
     const now = new Date();
 
 let fromHoursOffset = Math.trunc(

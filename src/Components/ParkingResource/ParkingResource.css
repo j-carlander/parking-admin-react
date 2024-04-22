@@ -1,0 +1,14 @@
+.resource-radio-wrapper,
+.resource-status-label{
+    display: flex;
+    align-items: center;
+}
+
+.resource-status-label{
+        justify-content: space-between;
+        width: 100%;
+
+        span:last-child{
+            color: grey;
+        }
+    }
