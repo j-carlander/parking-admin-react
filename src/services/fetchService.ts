@@ -1,13 +1,15 @@
 import {
+  BookingDTO,
   FlightDTO,
   LoginRequest,
+  MainFeatureDTO,
   OrderItemDTO,
   ResourceDTO,
   ResourceStatusDTO,
   UserDTO,
 } from "parking-sdk";
 import { calcOffset } from "../utils/calcOffset";
-import { resolvePath } from "react-router-dom";
+
 
 type Options = {
   method: string;
@@ -224,6 +226,12 @@ async function findPrepaidTicketsByBookingAdmin(
   return await response.json();
 }
 
+async function getMainFeaturesByBooking(body? :BookingDTO): Promise<MainFeatureDTO[]> {
+  const response = await fetchHelper('/public/mainfeatures', 'POST', body);
+  return await response.json();
+  
+}
+
 /** Exported object */
 const fetchService = {
   signIn,
@@ -241,5 +249,6 @@ const fetchService = {
   getResources,
   getAvailableResourcesByDates,
   findPrepaidTicketsByBookingAdmin,
+  getMainFeaturesByBooking
 };
 export default fetchService;
