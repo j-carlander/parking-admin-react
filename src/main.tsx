@@ -30,6 +30,10 @@ export const pages = [
   {
     path: '/ny-bokning',
     element: <BookingForm />
+  },
+  {
+    path: '/redigera-bokning/:bookingId',
+    element: <BookingForm />
   }
 ]
 

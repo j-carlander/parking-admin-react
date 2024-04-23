@@ -4,12 +4,12 @@ import {
   LoginRequest,
   MainFeatureDTO,
   OrderItemDTO,
+  PageOrderDTO,
   ResourceDTO,
   ResourceStatusDTO,
   UserDTO,
 } from "parking-sdk";
 import { calcOffset } from "../utils/calcOffset";
-
 
 type Options = {
   method: string;
@@ -118,12 +118,11 @@ async function getCurrentBookings() {
   );
 }
 
-async function getBooking(bookingId: number) {
-  if (!bookingId) return;
+async function getBooking(bookingId: number): Promise<BookingDTO> {
   const response = await fetchHelper(`/admin/bookings/${bookingId}`, "GET");
   const bookingJson = await response.json();
 
-  console.log("booking: ", bookingJson);
+  return bookingJson
 }
 
 /** New booking and order */
@@ -155,6 +154,65 @@ async function postUpdateOrderItem(
     item
   );
   console.log("update Order item: ", await response.json());
+}
+
+async function getOrdersAdmin(
+  page?: number,
+  size?: number,
+  sort?: string,
+  orderId?: number,
+  orderItemId?: number,
+  bookingId?: number,
+  featureId?: number,
+  createdFromDate?: Date,
+  createdToDate?: Date,
+  searchTerm?: string,
+  paymentMethodId?: string,
+  paymentStatusId?: string
+): Promise<PageOrderDTO> {
+  let queryParameters = new URLSearchParams
+  if (page !== undefined) {
+      queryParameters.append('page', <any>page);
+  }
+  if (size !== undefined) {
+      queryParameters.append('size', <any>size);
+  }
+  if (sort !== undefined) {
+      queryParameters.append('sort', <any>sort);
+  }
+  if (orderId !== undefined) {
+      queryParameters.append('orderId', <any>orderId);
+  }
+  if (orderItemId !== undefined) {
+      queryParameters.append('orderItemId', <any>orderItemId);
+  }
+  if (bookingId !== undefined) {
+      queryParameters.append('bookingId', <any>bookingId);
+  }
+  if (featureId !== undefined) {
+      queryParameters.append('featureId', <any>featureId);
+  }
+  if (createdFromDate !== undefined) {
+      queryParameters.append('createdFromDate', <any>createdFromDate.toISOString());
+  }
+  if (createdToDate !== undefined) {
+      queryParameters.append('createdToDate', <any>createdToDate.toISOString());
+  }
+  if (searchTerm !== undefined) {
+      queryParameters.append('searchTerm', <any>searchTerm);
+  }
+  if (paymentMethodId !== undefined) {
+      queryParameters.append('paymentMethodId', <any>paymentMethodId);
+  }
+  if (paymentStatusId !== undefined) {
+      queryParameters.append('paymentStatusId', <any>paymentStatusId);
+  }
+
+  console.log('queryParams: ', queryParameters.toString());
+  const response = await fetchHelper(`/admin/orders?${queryParameters.toString()}`, 'GET');
+  return await response.json()
+
+
 }
 
 /** Get features */
@@ -226,10 +284,11 @@ async function findPrepaidTicketsByBookingAdmin(
   return await response.json();
 }
 
-async function getMainFeaturesByBooking(body? :BookingDTO): Promise<MainFeatureDTO[]> {
-  const response = await fetchHelper('/public/mainfeatures', 'POST', body);
+async function getMainFeaturesByBooking(
+  body?: BookingDTO
+): Promise<MainFeatureDTO[]> {
+  const response = await fetchHelper("/public/mainfeatures", "POST", body);
   return await response.json();
-  
 }
 
 /** Exported object */
@@ -249,6 +308,7 @@ const fetchService = {
   getResources,
   getAvailableResourcesByDates,
   findPrepaidTicketsByBookingAdmin,
-  getMainFeaturesByBooking
+  getMainFeaturesByBooking,
+  getOrdersAdmin,
 };
 export default fetchService;
