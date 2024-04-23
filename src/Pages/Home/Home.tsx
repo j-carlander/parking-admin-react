@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import fetchService from "../../services/fetchService";
 import { useUserContext } from "../../App";
 import { FlightBookingDTO, HourBookingDTO } from "parking-sdk";
+import { CurrentBookings } from "../../Components/CurrentBookings/CurrentBookings";
 
 export function Home() {
   const [topic, setTopic] = useState<"ARRIVAL" | "DEPARTURE">("ARRIVAL");
@@ -11,15 +12,15 @@ export function Home() {
     { from: string; to: string } | undefined
   >(undefined);
   const [currentArrivalBookings, setCurrentArrivalBookings] = useState<
-    FlightBookingDTO[] | undefined
-  >(undefined);
+    FlightBookingDTO[]
+  >([]);
   const [currentDepartureBookings, setCurrentDepartureBookings] = useState<
-    HourBookingDTO[] | undefined
-  >(undefined);
+    HourBookingDTO[]
+  >([]);
   const { currentUser } = useUserContext();
 
   useEffect(() => {
-    (async function () {
+    (async function getCurrentBookings() {
       const timeOffset = await fetchService.getCurrentTimeOffset();
       setTimeRange(timeOffset);
       const [arrivals, departures] = await fetchService.getCurrentBookings();
@@ -35,6 +36,7 @@ export function Home() {
   return (
     <>
       <h2>{topic === "ARRIVAL" ? "Hämtlista" : "Lämnlista"}</h2>
+      <section className="toggle-time-wrapper">
       <div className="topic-toggles">
         <button
           className={topic === "ARRIVAL" ? "active" : undefined}
@@ -50,17 +52,12 @@ export function Home() {
         </button>
       </div>
       <div className="time-range">
-        {timeRange ? timeRange.from + " -> " + timeRange.to : undefined}
+        <p>Visar bokningar</p>
+        <p>{timeRange ? timeRange.from + " -> " + timeRange.to : undefined}</p>
       </div>
+      </section>
       <article>
-        <p>Current topic: {topic}</p>
-        {topic === "ARRIVAL"
-          ? currentArrivalBookings?.map((group) => (
-              <p key={group.flightNumber}>{group.flightNumber}</p>
-            ))
-          : currentDepartureBookings?.map((group, index) => (
-              <p key={index}>{group?.departureDate?.toString()}</p>
-            ))}
+        {topic === 'ARRIVAL' ? <CurrentBookings groups={currentArrivalBookings} /> : <CurrentBookings groups={currentDepartureBookings} />}
       </article>
     </>
   );

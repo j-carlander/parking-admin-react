@@ -1,3 +1,12 @@
+
+.toggle-time-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+
 .topic-toggles{
     display: flex;
 
@@ -21,4 +30,11 @@
             border-bottom-left-radius: .3rem;
         }
     }
+}
+
+.time-range{
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    color: grey;
 }
