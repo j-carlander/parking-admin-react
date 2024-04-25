@@ -7,36 +7,25 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "./ParkingFeaturesForm.css";
-import { BookingProps } from "../../types";
-import { useEffect, useState } from "react";
-import fetchService from "../../services/fetchService";
-import { FeatureWithPriceDTO, MainFeatureDTO } from "parking-sdk";
+import { SelectedFeatures } from "../../types";
 
-export function ParkingFeaturesForm({ booking }: BookingProps) {
-  const [availableFeatures, setAvailableFeatures] =
-    useState<MainFeatureDTO[]>();
-    const [selectedFeatures, setSelectedFeatures] =
-    useState<string[]>([]);
+import { MainFeatureDTO } from "parking-sdk";
+
+type ParkingFeaturesProps = {
+  availableFeatures: MainFeatureDTO[]
+  selectedFeatures: SelectedFeatures; 
+  setSelectedFeatures: React.Dispatch<React.SetStateAction<SelectedFeatures>>;
+};
+
+export function ParkingFeaturesForm({ selectedFeatures, setSelectedFeatures, availableFeatures }: ParkingFeaturesProps) {
 
 
-
-  useEffect(() => {
-    (async function () {
-       if(booking.arrivalDate && booking.departureDate && booking.registrationNumber && booking.resource?.resourceId){ 
-      const result = await fetchService.getMainFeaturesByBooking(booking);
-      console.log('main features: ', result);
-      setAvailableFeatures(result);
-}
-    })();
-  }, [booking]);
-
-  function handleCheckBox(e:React.ChangeEvent<HTMLInputElement> ){
-    setSelectedFeatures(selected => {
-        const index = selected.indexOf(e.target.name);
-        index >= 0 ? selected.splice(index,1): selected.push(e.target.name);
-        console.log('selectedFeatures: ', selected);
-        return selected
-    })
+  function handleCheckBox(e: React.ChangeEvent<HTMLInputElement>) {
+    setSelectedFeatures((selected) => {
+      const updated = {...selected, [e.target.name]: !selected[e.target.name]}
+      console.log("selectedFeatures: ", updated);
+      return updated;
+    });
   }
 
   return (
@@ -52,24 +41,24 @@ export function ParkingFeaturesForm({ booking }: BookingProps) {
           <h3>Tjänster</h3>
         </AccordionSummary>
         <AccordionDetails>
-          {availableFeatures?.map((mainFeature) => {
+          {availableFeatures.length > 0 ? availableFeatures?.map((mainFeature) => {
             return (
               <div key={mainFeature.mainFeatureId}>
                 <h4>{mainFeature.name}</h4>
-                {mainFeature.features?.map((feature) => (
+                {mainFeature.features?.map((feature) => {
+                 return feature.name ? (
                   <FormControlLabel
                     key={feature.featureId}
                     name={feature.name}
-                    checked={selectedFeatures?.some(value => value === feature.name) }
-                    
+                    checked={selectedFeatures[feature.name] || false}
                     className="extras-checkbox"
                     control={<Checkbox onChange={handleCheckBox} />}
                     label={`${feature.name} ${feature.price}kr`}
                   />
-                ))}
+                ) : null})}
               </div>
             );
-          })}
+          }) : null}
         </AccordionDetails>
       </Accordion>
     </>

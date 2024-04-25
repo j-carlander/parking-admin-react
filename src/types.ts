@@ -12,5 +12,9 @@ export type BookingProps = {
 
 export type TotalPrice = {
   resourcePrice: number;
-  featurePrices: number[];
+  featurePrices: number;
+}
+
+export type SelectedFeatures = {
+  [key:string]:boolean
 }
