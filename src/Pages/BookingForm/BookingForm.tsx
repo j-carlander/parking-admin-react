@@ -4,7 +4,7 @@ import {
   MainFeatureDTO,
   OrderDTO,
 } from "parking-sdk";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import "./BookingForm.css";
 import { SelectFlightForm } from "../../Components/SelectFlightForm/SelectFlightForm";
 import { ParkingDateRangeForm } from "../../Components/ParkingDateRangeForm/ParkingDateRangeForm";
@@ -14,19 +14,19 @@ import { CarDetailsForm } from "../../Components/CarDetailsForm/CarDetailsForm";
 import { ParkingFeaturesForm } from "../../Components/ParkingFeaturesForm/ParkingFeaturesForm";
 import { ContactsAndExtraForm } from "../../Components/ContactsAndExtraForm/ContactsAndExtraForm";
 import fetchService from "../../services/fetchService";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useUserContext } from "../../App";
 import { filterFeatures } from "../../services/filterFeatures";
 import { selectFeaturesByOrder } from "../../services/selectFeatureByOrder";
 import { getBookingToEdit } from "../../services/getBookingToEdit";
+import { checkRequiredFields } from "../../services/checkRequiredFields";
 // import { useFilterFeatures } from "../../Hooks/useFilterFeatures";
 
 export function BookingForm() {
   const [booking, setBooking] = useState<BookingDTO>(defaultBooking);
   const [order, setOrder] = useState<OrderDTO>();
-  const [selectedFeaturesByName, setSelectedFeaturesByName] = useState<SelectedFeatures>(
-    {}
-  );
+  const [selectedFeaturesByName, setSelectedFeaturesByName] =
+    useState<SelectedFeatures>({});
   const [availableFeatures, setAvailableFeatures] = useState<MainFeatureDTO[]>(
     []
   );
@@ -40,13 +40,13 @@ export function BookingForm() {
   const { bookingId } = useParams();
   const { currentUser } = useUserContext();
 
-
+  const navigate = useNavigate();
   // Get order and booking for editing
   useEffect(() => {
     if (bookingId && Number(bookingId)) {
       getBookingToEdit(bookingId, setOrder, setBooking, setTotalPrice);
     } else {
-      setBooking(defaultBooking)
+      setBooking(defaultBooking);
     }
   }, []);
 
@@ -63,7 +63,6 @@ export function BookingForm() {
     selectFeaturesByOrder(order, setSelectedFeaturesByName);
   }, [order]);
 
-
   // Get available features once when dates have been selected
   useEffect(() => {
     if (booking.arrivalDate && availableFeatures?.length <= 0) {
@@ -74,10 +73,34 @@ export function BookingForm() {
     }
   }, [booking]);
 
+  async function placeOrder(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    console.log("Place Order");
+    if (checkRequiredFields(booking)) {
+      let newOrder = await fetchService.createNewOrderObject();
+      if (newOrder.orderId) {
+        newOrder = await fetchService.postNewOrderItem(newOrder.orderId, {
+          orderItemType: "RESOURCE",
+          booking,
+        });
+        console.log("new order booking: ", newOrder);
 
-  function placeOrder(){
-    console.log('Place Order');
-    
+        if (filteredFeatures.length > 0) {
+          filteredFeatures.forEach(async (feature) => {
+            await fetchService.postNewOrderItem(newOrder.orderId!, {
+              orderItemType: "FEATURE",
+              feature,
+            });
+          });
+        }
+
+        if (
+          newOrder.orderItems?.some((item) => item.orderItemType === "RESOURCE")
+        ) {
+          navigate("/checka-ut", { state: { orderId: newOrder.orderId } });
+        }
+      }
+    }
   }
 
   // if (!currentUser) {
@@ -85,8 +108,8 @@ export function BookingForm() {
   // }
   return (
     <>
+      <form className="booking-form" onSubmit={placeOrder}>
       <h2>Ny bokning</h2>
-      <form className="booking-form">
         <SelectFlightForm {...{ booking, setBooking }} />
         <ParkingDateRangeForm {...{ booking, setBooking }} />
         <ParkingResource {...{ booking, setBooking, setTotalPrice }} />
@@ -101,10 +124,12 @@ export function BookingForm() {
         />
         <p className="total-price">
           <span>Totalpris: </span>
-          {(!booking.prepaidTicket ? totalPrice.resourcePrice : 0) + totalPrice.featurePrices} kr
+          {(!booking.prepaidTicket ? totalPrice.resourcePrice : 0) +
+            totalPrice.featurePrices}{" "}
+          kr
         </p>
         <ContactsAndExtraForm {...{ booking, setBooking }} />
-        <button className="submit-booking" onClick={placeOrder}>Nästa</button>
+        <button className="general-button">Nästa</button>
       </form>
     </>
   );

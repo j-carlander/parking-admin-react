@@ -26,5 +26,22 @@
 /* General styling */
 
 h2{
-  margin-block: 1em;
+  margin-block: 1rem;
+}
+
+.general-button{
+  display: block;
+  margin-inline: auto;
+  color: var(--primary-contrast);
+  background-color: var(--primary-color);
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  border: none;
+  font-weight: bold;
+  transition: 0.2s;
+
+
+  &:focus {
+    outline-color: var(--primary-shade);
+  }
 }

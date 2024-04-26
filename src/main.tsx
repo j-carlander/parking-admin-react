@@ -6,6 +6,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Home } from './Pages/Home/Home.tsx'
 import { Login } from './Pages/Login/Login.tsx'
 import { BookingForm } from './Pages/BookingForm/BookingForm.tsx'
+import { Checkout } from './Pages/Checkout/Checkout.tsx'
 
 export const pages = [
   {
@@ -34,6 +35,10 @@ export const pages = [
   {
     path: '/redigera-bokning/:bookingId',
     element: <BookingForm />
+  },
+  {
+    path: '/checka-ut',
+    element: <Checkout />
   }
 ]
 

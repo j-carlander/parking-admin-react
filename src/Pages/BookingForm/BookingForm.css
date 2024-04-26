@@ -1,4 +1,4 @@
-h2,
+
 .booking-form{
     max-width: 700px;
     margin: 0 auto;
@@ -36,7 +36,7 @@ h2,
     margin-left: 1rem !important;
 }
 
-.submit-booking{
+/* .submit-booking{
     display: block;
     margin-inline: auto;
     color: var(--primary-contrast);
@@ -51,4 +51,4 @@ h2,
     &:focus {
       outline-color: var(--primary-shade);
     }
-}
+} */

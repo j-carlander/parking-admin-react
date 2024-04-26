@@ -8,6 +8,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { BookingProps } from "../../types";
 
 export function ContactsAndExtraForm({ booking, setBooking }: BookingProps) {
+
   function updateBooking(e: React.ChangeEvent<HTMLInputElement>) {
     setBooking((booking) => ({ ...booking, [e.target.name]: e.target.value }));
   }

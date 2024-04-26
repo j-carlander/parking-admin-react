@@ -114,14 +114,9 @@ export function CarDetailsForm({ booking, setBooking }: BookingProps) {
         label="Abonnemang"
         select
         name="prepaid"
-        // value="notInUse"
         value={selectedPrepaid?.name || "notInUse"}
         onChange={(e) => updatePrepaid(e.target.value)}
         placeholder=""
-        // InputLabelProps={{
-        //   shrink: true,
-        // }}
-        required
       >
         <MenuItem key={"notInUse"} value={"notInUse"}>
           Använd ej

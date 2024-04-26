@@ -3,6 +3,7 @@ import {
   FlightDTO,
   LoginRequest,
   MainFeatureDTO,
+  OrderDTO,
   OrderItemDTO,
   PageOrderDTO,
   PrepaidTicketWithBookingDTO,
@@ -128,21 +129,27 @@ async function getBooking(bookingId: number): Promise<BookingDTO> {
 
 /** New booking and order */
 
-async function postNewOrderObject() {
+async function createNewOrderObject(): Promise<OrderDTO> {
   const response = await fetchHelper("/admin/orders", "POST");
   return await response.json();
 }
 
-async function postNewOrderItem(orderId: number, item: OrderItemDTO) {
-  if (!orderId && !item) return;
+async function postNewOrderItem(orderId: number, item: OrderItemDTO): Promise<OrderDTO>  {
+  if (!orderId && !item) throw new Error('Missing order id or order item');
   const response = await fetchHelper(
     `/admin/orders/${orderId}/orderItems`,
     "POST",
     item
   );
-  console.log("add Order item: ", await response.json());
+  const json = await response.json() 
+  console.log("add Order item: ", json );
+  return json
 }
 
+async function checkoutOrderNoPay(orderId:number): Promise<OrderDTO> {
+  const response = await fetchHelper(`/admin/orders/${orderId}/checkoutnopay`, 'POST')
+  return await response.json();
+}
 async function postUpdateOrderItem(
   orderId: number,
   orderItemId: number,
@@ -306,7 +313,7 @@ const fetchService = {
   getCurrentTimeOffset,
   getCurrentBookings,
   getBooking,
-  postNewOrderObject,
+  createNewOrderObject,
   postNewOrderItem,
   postUpdateOrderItem,
   getFlights,
@@ -316,5 +323,6 @@ const fetchService = {
   findPrepaidTicketsByBookingAdmin,
   getMainFeaturesByBooking,
   getOrdersAdmin,
+  checkoutOrderNoPay
 };
 export default fetchService;

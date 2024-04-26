@@ -9,16 +9,15 @@ import { useEffect, useState } from "react";
 import fetchService from "../../services/fetchService";
 import { suggestParkingDate } from "../../utils/suggestParkingDate";
 import { BookingProps } from "../../types";
-/** Types */
+
 
 export type TravelDates = {
   departure: string;
   arrival: string;
 };
 
-/** Component */
+
 export function SelectFlightForm({ booking, setBooking }: BookingProps) {
-  /** States */
   const [travelDates, setTravelDates] = useState<TravelDates>({
     departure: "",
     arrival: "",
@@ -40,7 +39,7 @@ export function SelectFlightForm({ booking, setBooking }: BookingProps) {
   }>({ departure: "", arrival: "" });
 
   useEffect(() => {
-    if (booking.departureDate) {
+    if (booking.departureDate && !travelDates.departure) {
       setTravelDates((traveldates) => ({
         ...traveldates,
         departure: new Intl.DateTimeFormat("sv-SE").format(
@@ -48,7 +47,7 @@ export function SelectFlightForm({ booking, setBooking }: BookingProps) {
         ),
       }));
     }
-    if (booking.arrivalDate) {
+    if (booking.arrivalDate && !travelDates.arrival) {
       setTravelDates((traveldates) => ({
         ...traveldates,
         arrival: new Intl.DateTimeFormat("sv-SE").format(booking.arrivalDate),
