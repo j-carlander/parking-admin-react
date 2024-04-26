@@ -31,7 +31,6 @@ export function ParkingResource({
               booking.arrivalDate
             )
           : [];
-      console.log("resources: ", response, resourceStatus);
 
       setResources(response);
       setAvailableResources(resourceStatus);

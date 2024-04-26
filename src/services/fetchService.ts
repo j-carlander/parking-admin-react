@@ -5,6 +5,7 @@ import {
   MainFeatureDTO,
   OrderItemDTO,
   PageOrderDTO,
+  PrepaidTicketWithBookingDTO,
   ResourceDTO,
   ResourceStatusDTO,
   UserDTO,
@@ -122,7 +123,7 @@ async function getBooking(bookingId: number): Promise<BookingDTO> {
   const response = await fetchHelper(`/admin/bookings/${bookingId}`, "GET");
   const bookingJson = await response.json();
 
-  return bookingJson
+  return bookingJson;
 }
 
 /** New booking and order */
@@ -170,49 +171,53 @@ async function getOrdersAdmin(
   paymentMethodId?: string,
   paymentStatusId?: string
 ): Promise<PageOrderDTO> {
-  let queryParameters = new URLSearchParams
+  let queryParameters = new URLSearchParams();
   if (page !== undefined) {
-      queryParameters.append('page', <any>page);
+    queryParameters.append("page", <any>page);
   }
   if (size !== undefined) {
-      queryParameters.append('size', <any>size);
+    queryParameters.append("size", <any>size);
   }
   if (sort !== undefined) {
-      queryParameters.append('sort', <any>sort);
+    queryParameters.append("sort", <any>sort);
   }
   if (orderId !== undefined) {
-      queryParameters.append('orderId', <any>orderId);
+    queryParameters.append("orderId", <any>orderId);
   }
   if (orderItemId !== undefined) {
-      queryParameters.append('orderItemId', <any>orderItemId);
+    queryParameters.append("orderItemId", <any>orderItemId);
   }
   if (bookingId !== undefined) {
-      queryParameters.append('bookingId', <any>bookingId);
+    queryParameters.append("bookingId", <any>bookingId);
   }
   if (featureId !== undefined) {
-      queryParameters.append('featureId', <any>featureId);
+    queryParameters.append("featureId", <any>featureId);
   }
   if (createdFromDate !== undefined) {
-      queryParameters.append('createdFromDate', <any>createdFromDate.toISOString());
+    queryParameters.append(
+      "createdFromDate",
+      <any>createdFromDate.toISOString()
+    );
   }
   if (createdToDate !== undefined) {
-      queryParameters.append('createdToDate', <any>createdToDate.toISOString());
+    queryParameters.append("createdToDate", <any>createdToDate.toISOString());
   }
   if (searchTerm !== undefined) {
-      queryParameters.append('searchTerm', <any>searchTerm);
+    queryParameters.append("searchTerm", <any>searchTerm);
   }
   if (paymentMethodId !== undefined) {
-      queryParameters.append('paymentMethodId', <any>paymentMethodId);
+    queryParameters.append("paymentMethodId", <any>paymentMethodId);
   }
   if (paymentStatusId !== undefined) {
-      queryParameters.append('paymentStatusId', <any>paymentStatusId);
+    queryParameters.append("paymentStatusId", <any>paymentStatusId);
   }
 
-  console.log('queryParams: ', queryParameters.toString());
-  const response = await fetchHelper(`/admin/orders?${queryParameters.toString()}`, 'GET');
-  return await response.json()
-
-
+  console.log("queryParams: ", queryParameters.toString());
+  const response = await fetchHelper(
+    `/admin/orders?${queryParameters.toString()}`,
+    "GET"
+  );
+  return await response.json();
 }
 
 /** Get features */
@@ -225,14 +230,15 @@ async function getMainFeatures() {
 /** Get flights by day and direction(type) */
 
 async function getFlights(
-  flightDate: string,
+  flightDate: string | undefined,
   flightType: string
 ): Promise<FlightDTO[]> {
+  if (!flightDate) return [];
+
   const queryParams = new URLSearchParams({
     flightDate,
     flightType: flightType.toUpperCase(),
   });
-  console.log("query: ", queryParams.toString());
 
   const response = await fetchHelper(
     `/admin/flights?${queryParams.toString()}`,
@@ -269,13 +275,13 @@ async function findPrepaidTicketsByBookingAdmin(
   resourceId: number,
   departureDate?: Date,
   arrivalDate?: Date
-) {
+): Promise<PrepaidTicketWithBookingDTO[]> {
   if (!regNum || !resourceId)
     throw new Error("Missing parameter registration number and/or resource ID");
 
   const params = `?registrationNumber=${regNum}&resourceId=${resourceId}${
-    departureDate ? "&" + departureDate.toISOString() : ""
-  }${arrivalDate ? "&" + arrivalDate.toISOString() : ""}`;
+    departureDate ? "&departureDate=" + departureDate.toISOString() : ""
+  }${arrivalDate ? "&arrivalDate=" + arrivalDate.toISOString() : ""}`;
 
   const response = await fetchHelper(
     `/admin/prepaidtickets/booking${params}`,

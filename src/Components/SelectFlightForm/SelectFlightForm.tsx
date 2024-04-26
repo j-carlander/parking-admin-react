@@ -1,4 +1,9 @@
-import { Autocomplete, AutocompleteChangeReason, AutocompleteInputChangeReason, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  AutocompleteChangeReason,
+  AutocompleteInputChangeReason,
+  TextField,
+} from "@mui/material";
 import { FlightDTO } from "parking-sdk";
 import { useEffect, useState } from "react";
 import fetchService from "../../services/fetchService";
@@ -38,21 +43,56 @@ export function SelectFlightForm({ booking, setBooking }: BookingProps) {
     if (booking.departureDate) {
       setTravelDates((traveldates) => ({
         ...traveldates,
-        departureDate: new Intl.DateTimeFormat("sv-SE").format(
+        departure: new Intl.DateTimeFormat("sv-SE").format(
           booking.departureDate
-        )
+        ),
       }));
     }
     if (booking.arrivalDate) {
       setTravelDates((traveldates) => ({
         ...traveldates,
-        arrivalDate: new Intl.DateTimeFormat("sv-SE").format(
-          booking.arrivalDate
-        )
+        arrival: new Intl.DateTimeFormat("sv-SE").format(booking.arrivalDate),
       }));
+    }
+
+    if (
+      booking.arrivalFlight !== undefined &&
+      booking.departureFlight !== undefined
+    ) {
+      setSelectedFlights({
+        departure: booking.departureFlight,
+        arrival: booking.arrivalFlight,
+      });
+    }
+    if (
+      booking.arrivalFlightNumber !== undefined &&
+      booking.departureFlightNumber !== undefined
+    ) {
+      setManualFlightInput({
+        departure: booking.departureFlightNumber,
+        arrival: booking.arrivalFlightNumber,
+      });
     }
   }, [booking]);
 
+  useEffect(() => {
+    (async function () {
+        const fetchDeparture = fetchService.getFlights(
+          travelDates.departure,
+          "departure"
+        );
+        const fetchArrival = fetchService.getFlights(
+          travelDates.arrival,
+          "arrival"
+        );
+        const [resultDeparture, resultArrival] = await Promise.all([
+          fetchDeparture,
+          fetchArrival,
+        ]);
+        setFlightLists({ departure: resultDeparture, arrival: resultArrival });
+    })();
+  }, [travelDates]);
+  
   /** Functions */
   async function updateFlightList(e: React.ChangeEvent<HTMLInputElement>) {
     const direction: string = e.currentTarget.name;
@@ -60,10 +100,18 @@ export function SelectFlightForm({ booking, setBooking }: BookingProps) {
     setTravelDates((dates) => ({ ...dates, [direction]: date }));
     setBooking((booking) => ({
       ...booking,
+      [`${direction}Flight`]: undefined,
+      [`${direction}FlightNumber`]: undefined,
       [`${direction}Date`]: new Date(date),
     }));
-    const result = await fetchService.getFlights(date, direction);
-    setFlightLists((lists) => ({ ...lists, [direction]: result }));
+    setManualFlightInput((manuals) => ({
+      ...manuals,
+      [direction]: "",
+    }));
+    setSelectedFlights((flights) => ({
+      ...flights,
+      [direction]: {},
+    }));
   }
 
   function generateOptionLabel(option: string | FlightDTO, direction: string) {
@@ -92,14 +140,14 @@ export function SelectFlightForm({ booking, setBooking }: BookingProps) {
 
   function onAutoCompleteChange(
     selectedFlight: FlightDTO | string | null,
-    reason:  AutocompleteChangeReason | AutocompleteInputChangeReason,
+    reason: AutocompleteChangeReason | AutocompleteInputChangeReason,
     direction: "departure" | "arrival"
   ) {
-    console.log('reason: ', reason);
-    if(reason === 'clear'){
+    console.log("reason: ", reason);
+    if (reason === "clear") {
       setManualFlightInput((manuals) => ({
         ...manuals,
-        [direction]: '',
+        [direction]: "",
       }));
       setSelectedFlights((flights) => ({
         ...flights,
@@ -111,9 +159,9 @@ export function SelectFlightForm({ booking, setBooking }: BookingProps) {
         [`${direction}FlightNumber`]: undefined,
         [`${direction}Date`]: new Date(travelDates[direction]),
       }));
-      return
+      return;
     }
-    
+
     if (selectedFlight && typeof selectedFlight === "object") {
       setSelectedFlights((flights) => ({
         ...flights,

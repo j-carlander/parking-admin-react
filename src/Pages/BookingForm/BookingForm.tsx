@@ -1,4 +1,9 @@
-import { BookingDTO, MainFeatureDTO, OrderDTO } from "parking-sdk";
+import {
+  BookingDTO,
+  FeatureWithPriceDTO,
+  MainFeatureDTO,
+  OrderDTO,
+} from "parking-sdk";
 import { useEffect, useState } from "react";
 import "./BookingForm.css";
 import { SelectFlightForm } from "../../Components/SelectFlightForm/SelectFlightForm";
@@ -11,12 +16,15 @@ import { ContactsAndExtraForm } from "../../Components/ContactsAndExtraForm/Cont
 import fetchService from "../../services/fetchService";
 import { Navigate, useParams } from "react-router-dom";
 import { useUserContext } from "../../App";
-import { useFilterFeatures } from "../../Hooks/useFilterFeatures";
+import { filterFeatures } from "../../services/filterFeatures";
+import { selectFeaturesByOrder } from "../../services/selectFeatureByOrder";
+import { getBookingToEdit } from "../../services/getBookingToEdit";
+// import { useFilterFeatures } from "../../Hooks/useFilterFeatures";
 
 export function BookingForm() {
   const [booking, setBooking] = useState<BookingDTO>(defaultBooking);
   const [order, setOrder] = useState<OrderDTO>();
-  const [selectedFeatures, setSelectedFeatures] = useState<SelectedFeatures>(
+  const [selectedFeaturesByName, setSelectedFeaturesByName] = useState<SelectedFeatures>(
     {}
   );
   const [availableFeatures, setAvailableFeatures] = useState<MainFeatureDTO[]>(
@@ -26,82 +34,55 @@ export function BookingForm() {
     resourcePrice: 0,
     featurePrices: 0,
   });
+  const [filteredFeatures, setFilteredFeatures] = useState<
+    FeatureWithPriceDTO[]
+  >([]);
   const { bookingId } = useParams();
-
-  const [filteredFeatures] = useFilterFeatures(
-    availableFeatures,
-    selectedFeatures,
-    setSelectedFeatures,
-    setTotalPrice,
-    order
-  );
-  console.log("filteredFeatures: ", filteredFeatures);
-
   const { currentUser } = useUserContext();
+
 
   // Get order and booking for editing
   useEffect(() => {
-    (async function () {
-      if (bookingId && Number(bookingId)) {
-        const getOrders = fetchService.getOrdersAdmin(
-          undefined,
-          1,
-          undefined,
-          undefined,
-          undefined,
-          Number(bookingId)
-        );
-        const getBooking = fetchService.getBooking(Number(bookingId));
-        const [orderResponse, bookingResponse] = await Promise.all([
-          getOrders,
-          getBooking,
-        ]);
-        if (orderResponse.content && orderResponse.content?.length > 0) {
-          const content = orderResponse.content[0];
-          console.log("order content: ", content);
-
-          if ("orderId" in content) {
-            setOrder(content);
-
-            const resource = content.orderItems?.filter((item) => item.orderItemType === "RESOURCE")[0];
-            const resourcePrice = resource?.amount
-            if (resourcePrice)
-              setTotalPrice((total: TotalPrice) => ({
-                ...total,
-                resourcePrice,
-              }));
-          }
-        }
-        if ("bookingId" in bookingResponse)
-          setBooking({
-            ...bookingResponse,
-            departureDate: new Date(bookingResponse.departureDate!),
-            arrivalDate: new Date(bookingResponse.arrivalDate!),
-          });
-      }
-    })();
+    if (bookingId && Number(bookingId)) {
+      getBookingToEdit(bookingId, setOrder, setBooking, setTotalPrice);
+    } else {
+      setBooking(defaultBooking)
+    }
   }, []);
+
+  useEffect(() => {
+    filterFeatures(
+      availableFeatures,
+      selectedFeaturesByName,
+      setFilteredFeatures,
+      setTotalPrice
+    );
+  }, [selectedFeaturesByName, availableFeatures]);
+
+  useEffect(() => {
+    selectFeaturesByOrder(order, setSelectedFeaturesByName);
+  }, [order]);
+
 
   // Get available features once when dates have been selected
   useEffect(() => {
     if (booking.arrivalDate && availableFeatures?.length <= 0) {
       (async function () {
         const result = await fetchService.getMainFeaturesByBooking(booking);
-        console.log(
-          "main features: ",
-          result.flatMap((main): any[] =>
-            main.features ? main.features?.map((feature) => feature) : []
-          )
-        );
         setAvailableFeatures(result);
       })();
     }
   }, [booking]);
 
+
+  function placeOrder(){
+    console.log('Place Order');
+    
+  }
+
   // if (!currentUser) {
   //   return <Navigate to={"/logga-in"} />;
   // }
-
   return (
     <>
       <h2>Ny bokning</h2>
@@ -112,18 +93,18 @@ export function BookingForm() {
         <CarDetailsForm {...{ booking, setBooking }} />
         <ParkingFeaturesForm
           {...{
-            selectedFeatures,
-            setSelectedFeatures,
+            selectedFeaturesByName,
+            setSelectedFeaturesByName,
             availableFeatures,
             order,
           }}
         />
         <p className="total-price">
           <span>Totalpris: </span>
-          {totalPrice.resourcePrice + totalPrice.featurePrices} kr
+          {(!booking.prepaidTicket ? totalPrice.resourcePrice : 0) + totalPrice.featurePrices} kr
         </p>
         <ContactsAndExtraForm {...{ booking, setBooking }} />
-        <button className="submit-booking">Nästa</button>
+        <button className="submit-booking" onClick={placeOrder}>Nästa</button>
       </form>
     </>
   );

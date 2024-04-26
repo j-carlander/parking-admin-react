@@ -13,17 +13,17 @@ import { MainFeatureDTO } from "parking-sdk";
 
 type ParkingFeaturesProps = {
   availableFeatures: MainFeatureDTO[]
-  selectedFeatures: SelectedFeatures; 
-  setSelectedFeatures: React.Dispatch<React.SetStateAction<SelectedFeatures>>;
+  selectedFeaturesByName: SelectedFeatures; 
+  setSelectedFeaturesByName: React.Dispatch<React.SetStateAction<SelectedFeatures>>;
 };
 
-export function ParkingFeaturesForm({ selectedFeatures, setSelectedFeatures, availableFeatures }: ParkingFeaturesProps) {
+export function ParkingFeaturesForm({ selectedFeaturesByName, setSelectedFeaturesByName, availableFeatures }: ParkingFeaturesProps) {
 
 
   function handleCheckBox(e: React.ChangeEvent<HTMLInputElement>) {
-    setSelectedFeatures((selected) => {
+    setSelectedFeaturesByName((selected) => {
       const updated = {...selected, [e.target.name]: !selected[e.target.name]}
-      console.log("selectedFeatures: ", updated);
+      console.log("selectedFeaturesByName: ", updated);
       return updated;
     });
   }
@@ -50,7 +50,7 @@ export function ParkingFeaturesForm({ selectedFeatures, setSelectedFeatures, ava
                   <FormControlLabel
                     key={feature.featureId}
                     name={feature.name}
-                    checked={selectedFeatures[feature.name] || false}
+                    checked={selectedFeaturesByName[feature.name] || false}
                     className="extras-checkbox"
                     control={<Checkbox onChange={handleCheckBox} />}
                     label={`${feature.name} ${feature.price}kr`}
