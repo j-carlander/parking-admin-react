@@ -1,5 +1,6 @@
 import {
   BookingDTO,
+  EngineTypeDTO,
   FlightDTO,
   LoginRequest,
   MainFeatureDTO,
@@ -10,6 +11,7 @@ import {
   ResourceDTO,
   ResourceStatusDTO,
   UserDTO,
+  VehicleTypeDTO,
 } from "parking-sdk";
 import { calcOffset } from "../utils/calcOffset";
 
@@ -134,20 +136,26 @@ async function createNewOrderObject(): Promise<OrderDTO> {
   return await response.json();
 }
 
-async function postNewOrderItem(orderId: number, item: OrderItemDTO): Promise<OrderDTO>  {
-  if (!orderId && !item) throw new Error('Missing order id or order item');
+async function postNewOrderItem(
+  orderId: number,
+  item: OrderItemDTO
+): Promise<OrderDTO> {
+  if (!orderId && !item) throw new Error("Missing order id or order item");
   const response = await fetchHelper(
     `/admin/orders/${orderId}/orderItems`,
     "POST",
     item
   );
-  const json = await response.json() 
-  console.log("add Order item: ", json );
-  return json
+  const json = await response.json();
+  console.log("add Order item: ", json);
+  return json;
 }
 
-async function checkoutOrderNoPay(orderId:number): Promise<OrderDTO> {
-  const response = await fetchHelper(`/admin/orders/${orderId}/checkoutnopay`, 'POST')
+async function checkoutOrderNoPay(orderId: number): Promise<OrderDTO> {
+  const response = await fetchHelper(
+    `/admin/orders/${orderId}/checkoutnopay`,
+    "POST"
+  );
   return await response.json();
 }
 async function postUpdateOrderItem(
@@ -227,13 +235,6 @@ async function getOrdersAdmin(
   return await response.json();
 }
 
-/** Get features */
-
-async function getMainFeatures() {
-  const response = await fetchHelper("/public/mainfeatures", "GET");
-  return await response.json();
-}
-
 /** Get flights by day and direction(type) */
 
 async function getFlights(
@@ -297,10 +298,27 @@ async function findPrepaidTicketsByBookingAdmin(
   return await response.json();
 }
 
+/** Get features */
+
+async function getMainFeatures() {
+  const response = await fetchHelper("/public/mainfeatures", "GET");
+  return await response.json();
+}
+
 async function getMainFeaturesByBooking(
   body?: BookingDTO
 ): Promise<MainFeatureDTO[]> {
   const response = await fetchHelper("/public/mainfeatures", "POST", body);
+  return await response.json();
+}
+
+async function getVehicleTypes(): Promise<VehicleTypeDTO[]> {
+  const response = await fetchHelper("/public/cars/vehicletypes", "GET");
+  return await response.json();
+}
+
+async function getEngineTypes(): Promise<EngineTypeDTO[]> {
+  const response = await fetchHelper('/public/cars/enginetypes', 'GET');
   return await response.json();
 }
 
@@ -323,6 +341,8 @@ const fetchService = {
   findPrepaidTicketsByBookingAdmin,
   getMainFeaturesByBooking,
   getOrdersAdmin,
-  checkoutOrderNoPay
+  checkoutOrderNoPay,
+  getVehicleTypes,
+  getEngineTypes
 };
 export default fetchService;
