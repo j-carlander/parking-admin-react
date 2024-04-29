@@ -21,18 +21,21 @@ export function ParkingResource({ setTotalPrice }: ParkingResourceProps) {
 
   useEffect(() => {
     (async function () {
-      const response =
-        resources.length <= 0 ? await fetchService.getResources() : resources;
-      const resourceStatus =
-        booking.departureDate && booking.arrivalDate
-          ? await fetchService.getAvailableResourcesByDates(
-              booking.departureDate,
-              booking.arrivalDate
-            )
-          : [];
-
-      setResources(response);
-      setAvailableResources(resourceStatus);
+      if (resources.length <= 0) {
+        const response =
+          resources.length <= 0 ? await fetchService.getResources() : resources;
+        setResources(response);
+      }
+      if (availableResources.length <= 0) {
+        const resourceStatus =
+          booking.departureDate && booking.arrivalDate
+            ? await fetchService.getAvailableResourcesByDates(
+                booking.departureDate,
+                booking.arrivalDate
+              )
+            : [];
+        setAvailableResources(resourceStatus);
+      }
     })();
 
     if (booking.resource?.name) setSelectedResource(booking.resource.name);

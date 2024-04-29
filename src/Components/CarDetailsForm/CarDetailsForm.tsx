@@ -14,7 +14,8 @@ export function CarDetailsForm() {
       if (
         booking.registrationNumber &&
         booking.registrationNumber.length >= 6 &&
-        booking.resource?.resourceId
+        booking.resource?.resourceId && 
+        prepaids.length <= 0
       ) {
         const result = await fetchService.findPrepaidTicketsByBookingAdmin(
           booking.registrationNumber,
@@ -22,7 +23,8 @@ export function CarDetailsForm() {
           booking.departureDate,
           booking.arrivalDate
         );
-
+        console.log('ticket result: ', result);
+        
         if (result.length >= 0) {
           const prepaidTickets: PrepaidTicketDTO[] = result.reduce(
             (res: PrepaidTicketDTO[], ticket: PrepaidTicketWithBookingDTO) => {
@@ -36,7 +38,7 @@ export function CarDetailsForm() {
                 )
               ) {
                 //If current booking is edited and already uses a prepaid, select it
-                updatePrepaid(prepaid);
+                setSelectedPrepaid(prepaid);
                 res.push(prepaid);
               } else if (
                 ticket.bookings &&
@@ -51,7 +53,7 @@ export function CarDetailsForm() {
             []
           );
           setPrepaids(prepaidTickets);
-          if (!selectedPrepaid) updatePrepaid(prepaids[0]);
+          if (!selectedPrepaid && !booking.prepaidTicket) setSelectedPrepaid(prepaids[0]);
         }
       }
     })();
