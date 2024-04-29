@@ -1,0 +1,14 @@
+.engine-radio-wrapper{
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    margin-left: 1rem;
+
+
+    h5{
+        min-width: 10ch;
+    }
+}
+.engine-radio-group{
+    flex-direction: row !important;
+}

@@ -1,0 +1,13 @@
+.vehicle-radio-wrapper{
+    display: flex;
+    align-items: center;
+    margin-left:1rem;
+
+
+    h5{
+        min-width: 10ch;
+    }
+}
+.vehicle-radio-group{
+    flex-direction: row !important;
+}

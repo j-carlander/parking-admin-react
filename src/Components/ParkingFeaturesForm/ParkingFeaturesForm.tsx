@@ -10,6 +10,8 @@ import "./ParkingFeaturesForm.css";
 import { SelectedFeatures } from "../../types";
 
 import { MainFeatureDTO } from "parking-sdk";
+import { VehicleTypeRadios } from "../VehicleTypeRadio/VehicleTypeRadio";
+import { EngineTypeRadios } from "../EngineTypeRadios/EngineTypeRadios";
 
 type ParkingFeaturesProps = {
   availableFeatures: MainFeatureDTO[]
@@ -41,6 +43,9 @@ export function ParkingFeaturesForm({ selectedFeaturesByName, setSelectedFeature
           <h3>Tjänster</h3>
         </AccordionSummary>
         <AccordionDetails>
+          <h4>Biltyp</h4>
+          <VehicleTypeRadios />
+          <EngineTypeRadios />
           {availableFeatures.length > 0 ? availableFeatures?.map((mainFeature) => {
             return (
               <div key={mainFeature.mainFeatureId}>
