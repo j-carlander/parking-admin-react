@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import "./Home.css";
-import { Navigate } from "react-router-dom";
+import { Navigate, useOutletContext } from "react-router-dom";
 import fetchService from "../../services/fetchService";
-import { useUserContext } from "../../App";
 import { FlightBookingDTO, HourBookingDTO } from "parking-sdk";
 import { CurrentBookings } from "../../Components/CurrentBookings/CurrentBookings";
+import { OutletContext } from "../../types";
 
 export function Home() {
   const [topic, setTopic] = useState<"ARRIVAL" | "DEPARTURE">("ARRIVAL");
@@ -17,7 +17,7 @@ export function Home() {
   const [currentDepartureBookings, setCurrentDepartureBookings] = useState<
     HourBookingDTO[]
   >([]);
-  const { currentUser } = useUserContext();
+  const { currentUser } = useOutletContext<OutletContext>();
 
   useEffect(() => {
     (async function getCurrentBookings() {

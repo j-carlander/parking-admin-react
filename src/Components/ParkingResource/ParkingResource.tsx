@@ -1,24 +1,23 @@
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
-import { BookingProps, TotalPrice } from "../../types";
+import { OutletContext, TotalPrice } from "../../types";
 import { useEffect, useState } from "react";
 import { ResourceDTO, ResourceStatusDTO } from "parking-sdk";
 import fetchService from "../../services/fetchService";
 import "./ParkingResource.css";
+import { useOutletContext } from "react-router-dom";
 
-type ParkingResourceProps = BookingProps & {
+type ParkingResourceProps = {
   setTotalPrice: React.Dispatch<React.SetStateAction<TotalPrice>>;
 };
 
-export function ParkingResource({
-  booking,
-  setBooking,
-  setTotalPrice,
-}: ParkingResourceProps) {
+export function ParkingResource({ setTotalPrice }: ParkingResourceProps) {
   const [selectedResource, setSelectedResource] = useState<string>("");
   const [resources, setResources] = useState<ResourceDTO[]>([]);
   const [availableResources, setAvailableResources] = useState<
     ResourceStatusDTO[]
   >([]);
+
+  const { booking, setBooking } = useOutletContext<OutletContext>();
 
   useEffect(() => {
     (async function () {

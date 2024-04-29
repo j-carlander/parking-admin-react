@@ -9,13 +9,12 @@ import "./BookingForm.css";
 import { SelectFlightForm } from "../../Components/SelectFlightForm/SelectFlightForm";
 import { ParkingDateRangeForm } from "../../Components/ParkingDateRangeForm/ParkingDateRangeForm";
 import { ParkingResource } from "../../Components/ParkingResource/ParkingResource";
-import { SelectedFeatures, TotalPrice } from "../../types";
+import { OutletContext, SelectedFeatures, TotalPrice } from "../../types";
 import { CarDetailsForm } from "../../Components/CarDetailsForm/CarDetailsForm";
 import { ParkingFeaturesForm } from "../../Components/ParkingFeaturesForm/ParkingFeaturesForm";
 import { ContactsAndExtraForm } from "../../Components/ContactsAndExtraForm/ContactsAndExtraForm";
 import fetchService from "../../services/fetchService";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { useUserContext } from "../../App";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { filterFeatures } from "../../services/filterFeatures";
 import { selectFeaturesByOrder } from "../../services/selectFeatureByOrder";
 import { getBookingToEdit } from "../../services/getBookingToEdit";
@@ -23,7 +22,7 @@ import { checkRequiredFields } from "../../services/checkRequiredFields";
 // import { useFilterFeatures } from "../../Hooks/useFilterFeatures";
 
 export function BookingForm() {
-  const [booking, setBooking] = useState<BookingDTO>(defaultBooking);
+  // const [booking, setBooking] = useState<BookingDTO>(defaultBooking);
   const [order, setOrder] = useState<OrderDTO>();
   const [selectedFeaturesByName, setSelectedFeaturesByName] =
     useState<SelectedFeatures>({});
@@ -38,7 +37,7 @@ export function BookingForm() {
     FeatureWithPriceDTO[]
   >([]);
   const { bookingId } = useParams();
-  const { currentUser } = useUserContext();
+  const {currentUser, booking, setBooking} = useOutletContext<OutletContext>();
 
   const navigate = useNavigate();
   // Get order and booking for editing
@@ -110,10 +109,10 @@ export function BookingForm() {
     <>
       <form className="booking-form" onSubmit={placeOrder}>
       <h2>Ny bokning</h2>
-        <SelectFlightForm {...{ booking, setBooking }} />
-        <ParkingDateRangeForm {...{ booking, setBooking }} />
-        <ParkingResource {...{ booking, setBooking, setTotalPrice }} />
-        <CarDetailsForm {...{ booking, setBooking }} />
+        <SelectFlightForm />
+        <ParkingDateRangeForm />
+        <ParkingResource {...{ setTotalPrice }} />
+        <CarDetailsForm />
         <ParkingFeaturesForm
           {...{
             selectedFeaturesByName,
@@ -128,7 +127,7 @@ export function BookingForm() {
             totalPrice.featurePrices}{" "}
           kr
         </p>
-        <ContactsAndExtraForm {...{ booking, setBooking }} />
+        <ContactsAndExtraForm />
         <button className="general-button">Nästa</button>
       </form>
     </>
@@ -136,7 +135,7 @@ export function BookingForm() {
 }
 
 /** Deafult object for a booking with all keys */
-const defaultBooking: BookingDTO = {
+export const defaultBooking: BookingDTO = {
   bookingId: undefined,
   name: undefined,
   phone: undefined,

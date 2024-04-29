@@ -1,7 +1,8 @@
 import { InputAdornment, TextField } from "@mui/material";
-import { BookingProps } from "../../types";
+import { OutletContext } from "../../types";
 import { useEffect, useState } from "react";
 import { formatTimeString } from "../../utils/formatTimeString";
+import { useOutletContext } from "react-router-dom";
 
 type ParkingTime = {
   departureDate: string;
@@ -10,13 +11,14 @@ type ParkingTime = {
   arrivalTime: string;
 };
 
-export function ParkingDateRangeForm({ booking, setBooking }: BookingProps) {
+export function ParkingDateRangeForm() {
   const [parkingTime, setParkingTime] = useState<ParkingTime>({
     departureDate: "",
     departureTime: "",
     arrivalDate: "",
     arrivalTime: "",
   });
+  const {booking, setBooking} = useOutletContext<OutletContext>();
 
   useEffect(() => {
     if (booking.departureDate) {

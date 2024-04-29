@@ -5,7 +5,7 @@ export type UserContext = {
     setCurrentUser: React.Dispatch<React.SetStateAction<UserDTO | undefined>>;
   };
   
-export type BookingProps = {
+export type BookingContext = {
   booking: BookingDTO;
   setBooking: React.Dispatch<React.SetStateAction<BookingDTO>>;
 };
@@ -18,3 +18,5 @@ export type TotalPrice = {
 export type SelectedFeatures = {
   [key:string]:boolean
 }
+
+export type OutletContext = UserContext & BookingContext;

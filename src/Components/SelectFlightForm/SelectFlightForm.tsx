@@ -8,7 +8,8 @@ import { FlightDTO } from "parking-sdk";
 import { useEffect, useState } from "react";
 import fetchService from "../../services/fetchService";
 import { suggestParkingDate } from "../../utils/suggestParkingDate";
-import { BookingProps } from "../../types";
+import { OutletContext } from "../../types";
+import { useOutletContext } from "react-router-dom";
 
 
 export type TravelDates = {
@@ -17,7 +18,7 @@ export type TravelDates = {
 };
 
 
-export function SelectFlightForm({ booking, setBooking }: BookingProps) {
+export function SelectFlightForm() {
   const [travelDates, setTravelDates] = useState<TravelDates>({
     departure: "",
     arrival: "",
@@ -37,6 +38,8 @@ export function SelectFlightForm({ booking, setBooking }: BookingProps) {
     departure: string;
     arrival: string;
   }>({ departure: "", arrival: "" });
+
+  const { booking, setBooking} = useOutletContext<OutletContext>();
 
   useEffect(() => {
     if (booking.departureDate && !travelDates.departure) {

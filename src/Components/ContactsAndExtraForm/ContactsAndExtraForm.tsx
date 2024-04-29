@@ -5,9 +5,11 @@ import {
   TextField,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import { BookingProps } from "../../types";
+import { OutletContext } from "../../types";
+import { useOutletContext } from "react-router-dom";
 
-export function ContactsAndExtraForm({ booking, setBooking }: BookingProps) {
+export function ContactsAndExtraForm() {
+  const { booking, setBooking } = useOutletContext<OutletContext>();
 
   function updateBooking(e: React.ChangeEvent<HTMLInputElement>) {
     setBooking((booking) => ({ ...booking, [e.target.name]: e.target.value }));

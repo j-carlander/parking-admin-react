@@ -1,15 +1,18 @@
 import { NavLink, Outlet, useOutletContext } from "react-router-dom";
 import "./App.css";
 import { Header } from "./Components/Header/Header";
-import { UserDTO } from "parking-sdk";
+import { BookingDTO, UserDTO } from "parking-sdk";
 import { useEffect, useState } from "react";
 import fetchService from "./services/fetchService";
-import { UserContext } from "./types";
+import { OutletContext, UserContext } from "./types";
+import { defaultBooking } from "./Pages/BookingForm/BookingForm";
 
 function App() {
   const [currentUser, setCurrentUser] = useState<UserDTO | undefined>(
     undefined
   );
+  const [booking, setBooking] = useState<BookingDTO>(defaultBooking);
+
 
   useEffect(() => {
     (async () => {
@@ -33,7 +36,7 @@ function App() {
         </aside>
         <main className="outlet-wrapper">
           <Outlet
-            context={{ currentUser, setCurrentUser } satisfies UserContext}
+            context={{ currentUser, setCurrentUser, booking, setBooking } satisfies OutletContext}
           />
         </main>
       </div>
@@ -43,6 +46,6 @@ function App() {
 
 export default App;
 
-export function useUserContext() {
-  return useOutletContext<UserContext>();
-}
+// export function useContext() {
+//   return useOutletContext<UserContext>();
+// }

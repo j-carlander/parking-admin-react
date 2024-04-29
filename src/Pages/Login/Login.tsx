@@ -1,14 +1,14 @@
 import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import './Login.css';
-import { useUserContext } from "../../App";
 import { LoginRequest } from "parking-sdk";
 import fetchService from "../../services/fetchService";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
+import { OutletContext } from "../../types";
 
 export function Login() {
   const navigate = useNavigate()
-  const {currentUser, setCurrentUser} = useUserContext();
+  const {currentUser, setCurrentUser} = useOutletContext<OutletContext>();
   const [credentials, setCredentials] = useState<LoginRequest>({
     username: "",
     password: "",
