@@ -24,7 +24,7 @@ function App() {
     <>
       <Header {...{ currentUser, setCurrentUser }} />
       <div className="page-wrapper">
-        <aside className="side-menu">
+        {currentUser ? <aside className="side-menu">
           <NavLink to={'/ny-bokning'}><span className="material-symbols-outlined side-menu-btn">add</span></NavLink>
           
           <span className="material-symbols-outlined side-menu-btn">
@@ -33,7 +33,7 @@ function App() {
           <span className="material-symbols-outlined side-menu-btn">
             attach_money
           </span>
-        </aside>
+        </aside> : null}
         <main className="outlet-wrapper">
           <Outlet
             context={{ currentUser, setCurrentUser, booking, setBooking } satisfies OutletContext}

@@ -43,7 +43,7 @@ export function BookingForm() {
   // Get order and booking for editing
   useEffect(() => {
     if (bookingId && Number(bookingId)) {
-      getBookingToEdit(bookingId, setOrder, setBooking, setTotalPrice);
+      getBookingToEdit(bookingId, setOrder, setBooking, setTotalPrice, setSelectedFeaturesByName);
     } else {
       setBooking(defaultBooking);
     }
@@ -58,9 +58,9 @@ export function BookingForm() {
     );
   }, [selectedFeaturesByName, availableFeatures]);
 
-  useEffect(() => {
-    selectFeaturesByOrder(order, setSelectedFeaturesByName);
-  }, [order]);
+  // useEffect(() => {
+  //   selectFeaturesByOrder(order, setSelectedFeaturesByName);
+  // }, [order]);
 
   // Get available features once when dates have been selected
   useEffect(() => {

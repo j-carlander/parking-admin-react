@@ -1,12 +1,14 @@
 import { BookingDTO, OrderDTO } from "parking-sdk";
-import { TotalPrice } from "../types";
+import { SelectedFeatures, TotalPrice } from "../types";
 import fetchService from "./fetchService";
+import { selectFeaturesByOrder } from "./selectFeatureByOrder";
 
 export async function getBookingToEdit(
   bookingId: string,
   setOrder: React.Dispatch<React.SetStateAction<OrderDTO | undefined>>,
   setBooking: React.Dispatch<React.SetStateAction<BookingDTO>>,
-  setTotalPrice: React.Dispatch<React.SetStateAction<TotalPrice>>
+  setTotalPrice: React.Dispatch<React.SetStateAction<TotalPrice>>,
+  setSelectedFeaturesByName: React.Dispatch<React.SetStateAction<SelectedFeatures>>
 ) {
   const getOrders = fetchService.getOrdersAdmin(
     undefined,
@@ -27,7 +29,7 @@ export async function getBookingToEdit(
 
     if ("orderId" in content) {
       setOrder(content);
-
+      selectFeaturesByOrder(content, setSelectedFeaturesByName)
       const resource = content.orderItems?.filter(
         (item) => item.orderItemType === "RESOURCE"
       )[0];

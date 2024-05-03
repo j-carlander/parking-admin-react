@@ -32,7 +32,7 @@ export function Header({currentUser ,setCurrentUser}: HeaderProps) {
         </h1>
         {currentUser ? <button className="signout-btn" onClick={signOut}>Logga ut</button> : null}
       </div>
-      <Navbar />
+      {currentUser ? <Navbar /> : null}
     </header>
   );
 }

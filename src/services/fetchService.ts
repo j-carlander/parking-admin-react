@@ -59,9 +59,11 @@ async function signIn(
     credentials
   );
   const json = await response.json();
-  console.log("json response: ", json);
+  if(response.status === 200){
   localStorage.setItem("TOKEN", json.jwt);
   setUser(await fetchService.getCurrentUser());
+}
+return response.status
 }
 
 function isAuthenticated() {

@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Home.css";
 import { Navigate, useOutletContext } from "react-router-dom";
 import fetchService from "../../services/fetchService";
 import { FlightBookingDTO, HourBookingDTO } from "parking-sdk";
 import { CurrentBookings } from "../../Components/CurrentBookings/CurrentBookings";
 import { OutletContext } from "../../types";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 export function Home() {
+  const shortPollTimerMs: number = 1000 * 60 * 5;
+  const shortPollId = useRef(0);
   const [topic, setTopic] = useState<"ARRIVAL" | "DEPARTURE">("ARRIVAL");
   const [timeRange, setTimeRange] = useState<
     { from: string; to: string } | undefined
@@ -27,7 +30,11 @@ export function Home() {
 
       setCurrentArrivalBookings(arrivals);
       setCurrentDepartureBookings(departures);
+
+      shortPollId.current = setTimeout(getCurrentBookings, shortPollTimerMs)
     })();
+
+    return () => clearTimeout(shortPollId.current)
   }, []);
 
   if (!currentUser) {
@@ -53,11 +60,12 @@ export function Home() {
       </div>
       <div className="time-range">
         <p>Visar bokningar</p>
-        <p>{timeRange ? timeRange.from + " -> " + timeRange.to : undefined}</p>
+        {timeRange ?<p> {timeRange.from} <ArrowForwardIcon /> {timeRange.to}</p> : undefined}
       </div>
       </section>
       <article>
-        {topic === 'ARRIVAL' ? <CurrentBookings groups={currentArrivalBookings} /> : <CurrentBookings groups={currentDepartureBookings} />}
+        <CurrentBookings groups={topic === 'ARRIVAL' ? currentArrivalBookings : currentDepartureBookings} />
+        {/* {topic === 'ARRIVAL' ? <CurrentBookings groups={currentArrivalBookings} /> : <CurrentBookings groups={currentDepartureBookings} />} */}
       </article>
     </>
   );
