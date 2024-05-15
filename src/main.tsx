@@ -5,29 +5,46 @@ import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Home } from './Pages/Home/Home.tsx'
 import { Login } from './Pages/Login/Login.tsx'
+import { BookingForm } from './Pages/BookingForm/BookingForm.tsx'
+import { Checkout } from './Pages/Checkout/Checkout.tsx'
 
-const pages = [
+export const pages = [
   {
-    path: "/",
-    element: <Home />
+    path: '/',
+    element: <Home />,
+    label: 'Bokningar'
   },
   {
-    path: "/logga-in",
+    path: '/logga-in',
     element: <Login />
   },
   {
     path:'/ordrar',
-    element: <h2>Ordrar</h2>
+    element: <h2>Ordrar</h2>,
+    label: 'Ordrar'
   },
   {
     path:'/garage',
-    element: <h2>Garage</h2>
+    element: <h2>Garage</h2>,
+    label: 'Garage'
+  },
+  {
+    path: '/ny-bokning',
+    element: <BookingForm />
+  },
+  {
+    path: '/redigera-bokning/:bookingId',
+    element: <BookingForm />
+  },
+  {
+    path: '/checka-ut',
+    element: <Checkout />
   }
 ]
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
     children: pages
   }

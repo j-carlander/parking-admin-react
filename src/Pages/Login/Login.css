@@ -1,3 +1,7 @@
+.login-title{
+    text-align: center;
+}
+
 .login-form{
     display: flex;
     flex-direction: column;
@@ -7,9 +11,14 @@
     margin-inline: auto;
 }
 
+.login-error-msg{
+    text-align: center;
+    color: rgb(194, 0, 0);
+}
+
 .login-btns{
     display: flex;
     gap: .5em;
-    justify-content: end;
+    justify-content: center;
     align-items: center;
 }

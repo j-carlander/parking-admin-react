@@ -1,6 +1,48 @@
-.outlet-wrapper{
-  /* text-align: center; */
-  max-width: 1280px;
-  margin: 0 auto;
+.page-wrapper{
+  display: flex;
 }
 
+.side-menu{
+  max-width: fit-content;
+  min-height: calc(100vh - 144px);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  box-shadow: 2px 0px 5px  #eeeeee;
+}
+
+.side-menu-btn{
+  border-radius: 50%;
+  padding: .75rem;
+  background-color: #8ab1f8;
+}
+
+.outlet-wrapper{
+  max-width: 1280px;
+  margin: 2rem ;
+  flex-grow: 1;
+}
+
+/* General styling */
+
+h2{
+  margin-block: 1rem;
+}
+
+.general-button{
+  display: block;
+  margin-inline: auto;
+  color: var(--primary-contrast);
+  background-color: var(--primary-color);
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  border: none;
+  font-weight: bold;
+  transition: 0.2s;
+
+
+  &:focus {
+    outline-color: var(--primary-shade);
+  }
+}

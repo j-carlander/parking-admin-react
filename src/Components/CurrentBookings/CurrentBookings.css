@@ -1,0 +1,44 @@
+
+.group-accordion{
+    margin-bottom: 2rem;
+    &:nth-last-child(1 of .call-group) {
+        margin-bottom: 4rem;
+    }
+}
+
+.group-summary,
+.summary-info,
+.summary-icons{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.group-summary{
+    width: 100%;
+    justify-content: space-between;
+}
+
+.summary-info{    
+    span{
+        min-width: 110px;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+
+        &.flight-info{
+            min-width: 160px;
+        }
+    }
+    .icon-rotate{
+        rotate: 90deg;
+    }
+}
+
+.summary-icons > *{
+    color: lightgrey;
+
+    &.active-icon{
+        color: black;
+    }
+}

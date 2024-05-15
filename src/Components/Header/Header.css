@@ -1,12 +1,29 @@
+.title-bar{
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  background-color: #c4d6fa;
+    padding: 2em 3em;
+
+}
+
 h1 {
     font-size: 2rem;
     line-height: 1.1;
-    text-align: start;
-    padding: 1em 1.5em;
+    /* text-align: start; */
     margin: 0;
-    background-color: #c4d6fa;
   }
 
+.logo-wrapper{
+    height: 40px;
+}
+
 .header-logo{
-    max-height: 40px;
+  height: 100%;
+}
+
+.signout-btn{
+  padding: 0;
+  background: none;
+  border: none;
 }

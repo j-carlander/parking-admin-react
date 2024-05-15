@@ -1,0 +1,54 @@
+
+.booking-form{
+    max-width: 700px;
+    margin: 0 auto;
+    & > * {
+        margin-block: 1rem;
+    }
+}
+
+.form-field-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+     & > * {
+        flex-basis: 50%;
+     }
+}
+
+.full-width-field{
+    display: block;
+    width: 100%;
+
+}
+
+
+.total-price{
+    text-align: end;
+
+    span{
+        font-weight: 600;
+    }
+}
+
+.extras-checkbox{
+    margin-left: 1rem !important;
+}
+
+/* .submit-booking{
+    display: block;
+    margin-inline: auto;
+    color: var(--primary-contrast);
+    background-color: var(--primary-color);
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    border: none;
+    font-weight: bold;
+    transition: 0.2s;
+
+  
+    &:focus {
+      outline-color: var(--primary-shade);
+    }
+} */
