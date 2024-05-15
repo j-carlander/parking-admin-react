@@ -20,15 +20,8 @@ export function Header({currentUser ,setCurrentUser}: HeaderProps) {
   return (
     <header>
       <div className="title-bar">
-        <div className="logo-wrapper">
-          <img
-            className="header-logo"
-            src="/lindskrog_logo.png"
-            alt="Lindskrog Logo"
-            aria-label="Lindskrog"
-          />
-        </div>
         <h1>
+          Parkering administration
         </h1>
         {currentUser ? <button className="signout-btn" onClick={signOut}>Logga ut</button> : null}
       </div>
