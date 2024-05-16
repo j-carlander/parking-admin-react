@@ -42,7 +42,6 @@ export function Home() {
   }
   return (
     <>
-      <h2>{topic === "ARRIVAL" ? "Hämtlista" : "Lämnlista"}</h2>
       <section className="toggle-time-wrapper">
       <div className="topic-toggles">
         <button
@@ -65,7 +64,6 @@ export function Home() {
       </section>
       <article>
         <CurrentBookings groups={topic === 'ARRIVAL' ? currentArrivalBookings : currentDepartureBookings} />
-        {/* {topic === 'ARRIVAL' ? <CurrentBookings groups={currentArrivalBookings} /> : <CurrentBookings groups={currentDepartureBookings} />} */}
       </article>
     </>
   );
