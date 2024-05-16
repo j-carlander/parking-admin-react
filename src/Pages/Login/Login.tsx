@@ -21,8 +21,9 @@ export function Login() {
       testUsername(credentials.username) &&
       testPassword(credentials.password)
     ) {
-      const status = await fetchService.signIn(credentials, setCurrentUser);
+      const status = await fetchService.signIn(credentials);
       if (status === 200) {
+        setCurrentUser(await fetchService.getCurrentUser());
         navigate("/");
       } else {
         setUserError("Fel användarnamn eller lösenord");
