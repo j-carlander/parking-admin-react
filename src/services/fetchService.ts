@@ -49,21 +49,17 @@ function fetchHelper(url: string, method: string, body?: any) {
  * */
 
 /** Authentication */
-async function signIn(
-  credentials: LoginRequest,
-  setUser: (value: UserDTO | undefined) => void
-) {
+async function signIn(credentials: LoginRequest) {
   const response = await fetchHelper(
     "/public/auth/signin",
     "POST",
     credentials
   );
   const json = await response.json();
-  if(response.status === 200){
-  localStorage.setItem("TOKEN", json.jwt);
-  setUser(await fetchService.getCurrentUser());
-}
-return response.status
+  if (response.status === 200) {
+    localStorage.setItem("TOKEN", json.jwt);
+  }
+  return response.status;
 }
 
 function isAuthenticated() {
@@ -320,7 +316,7 @@ async function getVehicleTypes(): Promise<VehicleTypeDTO[]> {
 }
 
 async function getEngineTypes(): Promise<EngineTypeDTO[]> {
-  const response = await fetchHelper('/public/cars/enginetypes', 'GET');
+  const response = await fetchHelper("/public/cars/enginetypes", "GET");
   return await response.json();
 }
 
@@ -345,6 +341,6 @@ const fetchService = {
   getOrdersAdmin,
   checkoutOrderNoPay,
   getVehicleTypes,
-  getEngineTypes
+  getEngineTypes,
 };
 export default fetchService;
